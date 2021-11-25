@@ -1,24 +1,27 @@
 package at.htl.repositories;
 
 import at.htl.dtos.MenueDTO;
+import at.htl.entities.Bestellung;
 import at.htl.entities.Kantine;
 import at.htl.entities.Menue;
+import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
-public class MenueRepository {
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("ooevkantine");
-    EntityManager entityManager = emf.createEntityManager();
+@Transactional
+@ApplicationScoped
+public class MenueRepository implements PanacheRepository<Menue> {
 
 
     public List<MenueDTO> getAllMenues() {
-        Query query = entityManager.createNamedQuery("Menue.getAllMenues",Object[].class);
+        Query query = this.getEntityManager().createNamedQuery("Menue.getAllMenues",Object[].class);
 
         return (List) query.getResultList().stream().map( m ->{
             Object[] temp = (Object[]) m;
@@ -37,13 +40,13 @@ public class MenueRepository {
         newMenue.setDate(LocalDate.parse(menueDTO.getDate()));
         newMenue.setCode(menueDTO.getCode());
 
-        newMenue.setKantine(entityManager.createNamedQuery("Kantine.getActive", Kantine.class)
+        newMenue.setKantine(this.getEntityManager().createNamedQuery("Kantine.getActive", Kantine.class)
                 .getSingleResult());
 
         try{
-            entityManager.getTransaction().begin();
-            entityManager.merge(newMenue);
-            entityManager.getTransaction().commit();
+            this.getEntityManager().getTransaction().begin();
+            this.getEntityManager().merge(newMenue);
+            this.getEntityManager().getTransaction().commit();
             return true;
         }catch (Exception ex){
             return false;
@@ -52,7 +55,7 @@ public class MenueRepository {
     }
 
     public boolean replaceMenue(MenueDTO menueDTO) {
-        Menue menueFromDb = entityManager.createNamedQuery("Menue.getById", Menue.class)
+        Menue menueFromDb = this.getEntityManager().createNamedQuery("Menue.getById", Menue.class)
                 .setParameter("id", menueDTO.getId()).getSingleResult();
 
 
@@ -62,9 +65,9 @@ public class MenueRepository {
         menueFromDb.setCode(menueDTO.getCode());
 
         try{
-            entityManager.getTransaction().begin();
-            entityManager.merge(menueFromDb);
-            entityManager.getTransaction().commit();
+            this.getEntityManager().getTransaction().begin();
+            this.getEntityManager().merge(menueFromDb);
+            this.getEntityManager().getTransaction().commit();
             return true;
         }catch (Exception ex){
             return false;
