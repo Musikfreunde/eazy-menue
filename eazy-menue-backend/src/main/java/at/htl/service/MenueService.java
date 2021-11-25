@@ -8,7 +8,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/menues")
+@Path("/menue/menues")
 public class MenueService {
     @Inject
     private MenueRepository menueRepository;

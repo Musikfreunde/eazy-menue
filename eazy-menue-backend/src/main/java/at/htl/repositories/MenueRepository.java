@@ -44,9 +44,7 @@ public class MenueRepository implements PanacheRepository<Menue> {
                 .getSingleResult());
 
         try{
-            this.getEntityManager().getTransaction().begin();
-            this.getEntityManager().merge(newMenue);
-            this.getEntityManager().getTransaction().commit();
+            Menue xd = this.getEntityManager().merge(newMenue);
             return true;
         }catch (Exception ex){
             return false;

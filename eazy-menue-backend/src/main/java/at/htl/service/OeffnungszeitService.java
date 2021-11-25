@@ -7,7 +7,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/oeffnungszeiten")
+@Path("/menue/oeffnungszeiten")
 public class OeffnungszeitService {
     @Inject
     private OeffnungszeitenRepository oeffnungszeitRepository;
