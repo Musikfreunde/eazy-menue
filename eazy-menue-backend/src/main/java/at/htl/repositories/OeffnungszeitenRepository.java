@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Transactional
 @ApplicationScoped
 public class OeffnungszeitenRepository implements PanacheRepository<Oeffnungszeit> {
-   public List<OeffnungszeitenDTO> getAllActiveOeffnungszeiten() {
+    public List<OeffnungszeitenDTO> getAllActiveOeffnungszeiten() {
         Query query = this.getEntityManager().createNamedQuery("Oeffnungszeit.getTimesActive",Object[].class);
 
         return (List) query.getResultList().stream().map( m ->{

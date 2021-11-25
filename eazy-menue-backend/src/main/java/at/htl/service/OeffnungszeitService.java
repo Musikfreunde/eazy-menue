@@ -15,8 +15,7 @@ public class OeffnungszeitService {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAllMenues() {
-        //return Response.ok(oeffnungszeitRepository.getAllActiveOeffnungszeiten()).build();
-        return null;
+        return Response.ok(oeffnungszeitRepository.getAllActiveOeffnungszeiten()).build();
     }
 
     @GET
