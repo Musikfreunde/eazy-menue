@@ -32,4 +32,11 @@ public class MenueService {
     public Response replaceMenue(MenueDTO menueDTO){
         return Response.ok(menueRepository.replaceMenue(menueDTO)).build();
     }
+    @Path("/recommendation")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getRecommendation(@QueryParam("date") String date,@QueryParam("name") String name) {
+        return Response.ok(menueRepository.getRecommendation(name,date)).build();
+    }
+
 }

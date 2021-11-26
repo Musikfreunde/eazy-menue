@@ -14,7 +14,7 @@ import java.util.Objects;
         @NamedQuery(name = "Bestellung.getOrdersByDate",
                 query = "select b.menue.code ,CONCAT(CONCAT(b.oeffnungszeit.timeWindowFrom ,' - '), b.oeffnungszeit.timeWindowTo) as timewindow, b.orderedFor, b.menue.mainDish, b.menue.date, b.personalNumber, b.menueCounter from Bestellung b where b.menue.date = :date and b.canceledAt is null order by b.menue.code, b.orderedFor "),
         @NamedQuery(name = "Bestellung.getALlCategoriesByUsername",
-                query = "select b.menue.categories from Bestellung b where b.orderedFor = :name")
+                query = "select b.menue.categories from Bestellung b where b.orderedFor = :name group by b.menue.categories order by count(b) DESC")
 
 })
 public class Bestellung {

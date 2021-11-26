@@ -13,6 +13,9 @@ import java.util.List;
         ),
         @NamedQuery(name="Menue.getById",
                 query = "select m from Menue m where m.id = :id"
+        ),
+        @NamedQuery(name="Menue.getMenuesByDate",
+                query = "select m from Menue m  where m.date = :date"
         )
 })
 public class Menue {

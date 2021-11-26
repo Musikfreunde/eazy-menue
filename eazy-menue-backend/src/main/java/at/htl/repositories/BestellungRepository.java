@@ -83,23 +83,16 @@ public class BestellungRepository implements PanacheRepository<Bestellung> {
     }
 
     public List<String> getALlCategoriesByUsername(String name) {
-
         TypedQuery<String> query = this.getEntityManager().createNamedQuery("Bestellung.getALlCategoriesByUsername", String.class)
                 .setParameter("name", name);
-
         List<String> categories = new LinkedList<>();
-
         query.getResultList().forEach(c -> {
             if (c.contains(";")){
                 String[] categoriesArray = c.split(";");
                 categories.addAll(Arrays.asList(categoriesArray));
             }
-            else{
-                categories.add(c);
-            }
-
+            else{categories.add(c);}
         });
         return categories;
-
     }
 }

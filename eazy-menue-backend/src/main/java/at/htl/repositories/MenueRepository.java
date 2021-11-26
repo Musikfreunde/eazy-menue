@@ -1,24 +1,25 @@
 package at.htl.repositories;
 
 import at.htl.dtos.MenueDTO;
-import at.htl.entities.Bestellung;
 import at.htl.entities.Kantine;
 import at.htl.entities.Menue;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
+import javax.inject.Inject;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 @Transactional
 @ApplicationScoped
 public class MenueRepository implements PanacheRepository<Menue> {
 
+
+    @Inject
+     BestellungRepository bestellungRepository;
 
     public List<MenueDTO> getAllMenues() {
         Query query = this.getEntityManager().createNamedQuery("Menue.getAllMenues",Object[].class);
@@ -70,5 +71,35 @@ public class MenueRepository implements PanacheRepository<Menue> {
         }catch (Exception ex){
             return false;
         }
+    }
+    public List<Menue> getMenuesByDate(String date) {
+        LocalDate dateObject = LocalDate.parse(date);
+        TypedQuery<Menue> query = this.getEntityManager().createNamedQuery("Menue.getMenuesByDate",Menue.class)
+                .setParameter("date", dateObject);
+        return query.getResultList();
+
+    }
+
+    public Menue getRecommendation(String name, String date){
+        List<String> categories = bestellungRepository.getALlCategoriesByUsername(name);
+        List<Menue> menues = getMenuesByDate(date);
+        Menue recommendedMenue = null;
+
+        for (Menue m : menues){
+            String[] categorieOfMenue = m.getCategories().split(";");
+            for (String category : categories){
+                for (String c : categorieOfMenue){
+                    if (category.equals(c)){
+                        recommendedMenue = m ;
+                        break;
+                    }
+                }
+
+            }
+        }
+
+        return recommendedMenue;
+
+
     }
 }
