@@ -22,8 +22,6 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class BestellungRepository implements PanacheRepository<Bestellung> {
 
-
-
     public List<BestellungHistoryDTO> getOrdersOfUser(String name) {
         Query query = this.getEntityManager().createNamedQuery("Bestellung.getOrdersOfUser", Object[].class).setParameter("name", name);
 
@@ -91,12 +89,10 @@ public class BestellungRepository implements PanacheRepository<Bestellung> {
 
         List<String> categories = new LinkedList<>();
 
-        query.getResultList().stream().forEach(c -> {
+        query.getResultList().forEach(c -> {
             if (c.contains(";")){
                 String[] categoriesArray = c.split(";");
-                Arrays.stream(categoriesArray).forEach(i ->{
-                    categories.add(i);
-                });
+                categories.addAll(Arrays.asList(categoriesArray));
             }
             else{
                 categories.add(c);
