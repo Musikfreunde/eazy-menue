@@ -9,13 +9,12 @@ import at.htl.entities.Oeffnungszeit;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,9 +49,7 @@ public class BestellungRepository implements PanacheRepository<Bestellung> {
         newBestellung.setOeffnungszeit(this.getEntityManager().createNamedQuery("Oeffnungszeit.getById", Oeffnungszeit.class).setParameter("id", bestellungDTO.getTimeId()).getSingleResult());
         newBestellung.setPersonalNumber(bestellungDTO.getPersonalNummer());
         try {
-            this.getEntityManager().getTransaction().begin();
-            this.getEntityManager().persist(newBestellung);
-            this.getEntityManager().getTransaction().commit();
+            persist(newBestellung);
             return true;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -84,6 +81,29 @@ public class BestellungRepository implements PanacheRepository<Bestellung> {
             return new BestellungKantineDTO((char) temp[0], (String) temp[1], (String) temp[2],
                     (String) temp[3],((LocalDate) temp[4]).toString(), (Long) temp[5],(Integer) temp[6]);
         }).collect(Collectors.toList());
+
+    }
+
+    public List<String> getALlCategoriesByUsername(String name) {
+
+        TypedQuery<String> query = this.getEntityManager().createNamedQuery("Bestellung.getALlCategoriesByUsername", String.class)
+                .setParameter("name", name);
+
+        List<String> categories = new LinkedList<>();
+
+        query.getResultList().stream().forEach(c -> {
+            if (c.contains(";")){
+                String[] categoriesArray = c.split(";");
+                Arrays.stream(categoriesArray).forEach(i ->{
+                    categories.add(i);
+                });
+            }
+            else{
+                categories.add(c);
+            }
+
+        });
+        return categories;
 
     }
 }

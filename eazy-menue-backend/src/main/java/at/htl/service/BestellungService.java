@@ -21,6 +21,14 @@ public class BestellungService {
     }
 
     @GET
+    @Path("/categories/{name}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getALlCategoriesByUsername(@PathParam("name") String name) {
+        return Response.ok(bestellungRepository.getALlCategoriesByUsername(name)).build();
+    }
+
+
+    @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getOrdersByDate(@QueryParam("date") String date) {
         return Response.ok(bestellungRepository.getOrdersByDate(date)).build();

@@ -3,6 +3,7 @@ package at.htl.entities;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "MENUE")
@@ -47,6 +48,9 @@ public class Menue {
 
     @Column(name = "GEAENDERTVON",length = 32)
     private String changedBy;
+
+    @Column(name = "CATEGORIES",length = 255)
+    private String categories;
 
     @ManyToOne
     @JoinColumn(name = "KANTINE_ID")
@@ -141,5 +145,17 @@ public class Menue {
 
     public void setKantine(Kantine kantine) {
         this.kantine = kantine;
+    }
+
+    public void setDesert(String desert) {
+        this.desert = desert;
+    }
+
+    public String getCategories() {
+        return categories;
+    }
+
+    public void setCategories(String categories) {
+        this.categories = categories;
     }
 }
