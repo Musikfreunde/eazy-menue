@@ -95,4 +95,17 @@ public class BestellungRepository implements PanacheRepository<Bestellung> {
         });
         return categories;
     }
+
+    public List<String> getALlCategories(){
+        TypedQuery<String> query = this.getEntityManager().createNamedQuery("Bestellung.getALlCategories", String.class);
+        List<String> categories = new LinkedList<>();
+        query.getResultList().forEach(c -> {
+            if (c.contains(";")){
+                String[] categoriesArray = c.split(";");
+                categories.addAll(Arrays.asList(categoriesArray));
+            }
+            else{categories.add(c);}
+        });
+        return categories.stream().distinct().collect(Collectors.toList());
+    }
 }

@@ -26,6 +26,12 @@ public class BestellungService {
     public Response getALlCategoriesByUsername(@PathParam("name") String name) {
         return Response.ok(bestellungRepository.getALlCategoriesByUsername(name)).build();
     }
+    @GET
+    @Path("/categories")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getALlCategoriesByUsername() {
+        return Response.ok(bestellungRepository.getALlCategories()).build();
+    }
 
 
     @GET
