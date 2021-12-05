@@ -34,9 +34,9 @@ public class MenueService {
     }
     @Path("/recommendation")
     @GET
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.TEXT_PLAIN)
     public Response getRecommendation(@QueryParam("date") String date,@QueryParam("name") String name) {
-        return Response.ok(menueRepository.getRecommendation(name,date)).build();
+        return Response.ok(menueRepository.getRecommendation(name,date).getCode()).build();
     }
 
 }
