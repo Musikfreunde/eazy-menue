@@ -4,6 +4,7 @@ import at.htl.dtos.BestellungDTO;
 import at.htl.dtos.BestellungHistoryDTO;
 import at.htl.dtos.BestellungKantineDTO;
 import at.htl.entities.Bestellung;
+import at.htl.entities.Categories;
 import at.htl.entities.Menue;
 import at.htl.entities.Oeffnungszeit;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Transactional
 @ApplicationScoped
@@ -97,15 +99,6 @@ public class BestellungRepository implements PanacheRepository<Bestellung> {
     }
 
     public List<String> getALlCategories(){
-        TypedQuery<String> query = this.getEntityManager().createNamedQuery("Bestellung.getALlCategories", String.class);
-        List<String> categories = new LinkedList<>();
-        query.getResultList().forEach(c -> {
-            if (c.contains(";")){
-                String[] categoriesArray = c.split(";");
-                categories.addAll(Arrays.asList(categoriesArray));
-            }
-            else{categories.add(c);}
-        });
-        return categories.stream().distinct().collect(Collectors.toList());
+        return Stream.of(Categories.values()).map(Categories::name).collect(Collectors.toList());
     }
 }
