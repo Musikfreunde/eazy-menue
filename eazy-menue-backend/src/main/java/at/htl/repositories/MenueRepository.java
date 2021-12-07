@@ -40,6 +40,7 @@ public class MenueRepository implements PanacheRepository<Menue> {
         newMenue.setDessert(menueDTO.getDessert());
         newMenue.setDate(LocalDate.parse(menueDTO.getDate()));
         newMenue.setCode(menueDTO.getCode());
+        newMenue.setCategories(menueDTO.getCategories());
 
         newMenue.setKantine(this.getEntityManager().createNamedQuery("Kantine.getActive", Kantine.class)
                 .getSingleResult());
@@ -62,6 +63,7 @@ public class MenueRepository implements PanacheRepository<Menue> {
         menueFromDb.setMainDish(menueDTO.getMainDish());
         menueFromDb.setDessert(menueDTO.getDessert());
         menueFromDb.setCode(menueDTO.getCode());
+        menueFromDb.setCategories(menueDTO.getCategories());
 
         try{
             this.getEntityManager().getTransaction().begin();

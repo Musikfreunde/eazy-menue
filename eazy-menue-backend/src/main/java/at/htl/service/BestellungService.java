@@ -29,7 +29,7 @@ public class BestellungService {
     @GET
     @Path("/categories")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getALlCategoriesByUsername() {
+    public Response getALlCategories() {
         return Response.ok(bestellungRepository.getALlCategories()).build();
     }
 
