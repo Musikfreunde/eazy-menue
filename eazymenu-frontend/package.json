@@ -19,6 +19,7 @@
     "vue": "^2.6.14",
     "vue-generate-component": "^3.0.1",
     "vue-good-table": "^2.21.10",
+    "vue-google-charts": "^0.3.3",
     "vue-html-to-paper": "^1.4.3",
     "vue-pdf": "^4.3.0",
     "vue-router": "^3.2.0",

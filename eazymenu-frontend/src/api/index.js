@@ -32,6 +32,12 @@ export const api = {
   async getRecommendationForDay (dateString, userName) {
     return axios.get(this.HOST_URL + '/menues/recommendation?date=' + dateString + '&name=' + userName)
   },
+  async getAllCategories () {
+    return axios.get(this.HOST_URL + '/bestellung/categories')
+  },
+  async getCategoriesForUserName (userName) {
+    return axios.get(this.HOST_URL + '/bestellung/categories/' + userName)
+  },
   isOnSameDay (date1, date2) {
     date1.setHours(0, 0, 0, 0)
     date2.setHours(0, 0, 0, 0)

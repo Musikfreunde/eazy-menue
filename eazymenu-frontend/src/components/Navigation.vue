@@ -17,6 +17,7 @@
         <b-list-group>
           <b-list-group-item @click="$router.push('/')" button v-if="$route.name !== 'Uebersicht'">Übersicht</b-list-group-item>
           <b-list-group-item @click="$router.push('/verlauf')" button v-if="$route.name !== 'Verlauf' && this.$keycloak.hasRealmRole('mitarbeiter')">Bestellverlauf</b-list-group-item>
+          <b-list-group-item @click="$router.push('/statistiken')" button v-if="$route.name !== 'Statistiken' && this.$keycloak.hasRealmRole('mitarbeiter')">Statistiken</b-list-group-item>
           <b-list-group-item @click="$router.push('/drucken')" button v-if="this.$keycloak.hasRealmRole('kantine') && $route.name !== 'Drucken'">Drucken</b-list-group-item>
         </b-list-group>
       </nav>

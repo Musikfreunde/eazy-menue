@@ -35,6 +35,14 @@ const routes = [
       isAuthenticated: true
     },
     component: () => import('../views/Drucken')
+  },
+  {
+    path: '/statistiken',
+    name: 'Statistiken',
+    meta: {
+      isAuthenticated: true
+    },
+    component: () => import('../views/Statistiken')
   }
 ]
 
@@ -49,6 +57,9 @@ router.beforeEach((to, from, next) => {
     next({ name: 'Ubersicht' })
   }
   if (to.name === 'Verlauf' && Vue.$keycloak.hasRealmRole('kantine')) {
+    next({ name: 'Ubersicht' })
+  }
+  if (to.name === 'Statistiken' && Vue.$keycloak.hasRealmRole('kantine')) {
     next({ name: 'Ubersicht' })
   }
   next()

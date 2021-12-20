@@ -127,8 +127,11 @@ export default {
         this.currentDate = new Date(this.$store.getters.getCurrentMenues[0].date)
         this.vorspeise = this.$store.getters.getCurrentMenues[0].appetizer
         this.dessert = this.$store.getters.getCurrentMenues[0].dessert
-        const resp = await api.getRecommendationForDay(this.$store.getters.getCurrentMenues[0].date, this.$keycloak.idTokenParsed.preferred_username)
-        this.recommendedLetter = resp.data
+
+        if (this.$keycloak.hasRealmRole('mitarbeiter')) {
+          const resp = await api.getRecommendationForDay(this.$store.getters.getCurrentMenues[0].date, this.$keycloak.idTokenParsed.preferred_username)
+          this.recommendedLetter = resp.data
+        }
       } else {
         this.vorspeise = ''
         this.dessert = ''
@@ -139,9 +142,9 @@ export default {
       let menuPostB
       let menuPostC
       if (this.$store.getters.getCurrentMenues.length === 0) {
-        menuePostA = new MenuViewDto(null, this.currentDate, 'A', this.vorspeise, this.menuA.mainDish, this.dessert)
-        menuPostB = new MenuViewDto(null, this.currentDate, 'B', this.vorspeise, this.menuB.mainDish, this.dessert)
-        menuPostC = new MenuViewDto(null, this.currentDate, 'C', this.vorspeise, this.menuC.mainDish, this.dessert)
+        menuePostA = new MenuViewDto(null, this.currentDate, 'A', this.vorspeise, this.menuA.mainDish, this.dessert, this.menuA.categories)
+        menuPostB = new MenuViewDto(null, this.currentDate, 'B', this.vorspeise, this.menuB.mainDish, this.dessert, this.menuB.categories)
+        menuPostC = new MenuViewDto(null, this.currentDate, 'C', this.vorspeise, this.menuC.mainDish, this.dessert, this.menuC.categories)
 
         await api.postMenue(menuePostA)
         await api.postMenue(menuPostB)
@@ -153,9 +156,9 @@ export default {
         this.$store.commit('setMenues', response.data)
         this.changeCurrentMenues(this.currentDate)
       } else {
-        menuePostA = new MenuViewDto(this.menuA.id, this.currentDate, 'A', this.vorspeise, this.menuA.mainDish, this.dessert)
-        menuPostB = new MenuViewDto(this.menuB.id, this.currentDate, 'B', this.vorspeise, this.menuB.mainDish, this.dessert)
-        menuPostC = new MenuViewDto(this.menuC.id, this.currentDate, 'C', this.vorspeise, this.menuC.mainDish, this.dessert)
+        menuePostA = new MenuViewDto(this.menuA.id, this.currentDate, 'A', this.vorspeise, this.menuA.mainDish, this.dessert, this.menuA.categories)
+        menuPostB = new MenuViewDto(this.menuB.id, this.currentDate, 'B', this.vorspeise, this.menuB.mainDish, this.dessert, this.menuB.categories)
+        menuPostC = new MenuViewDto(this.menuC.id, this.currentDate, 'C', this.vorspeise, this.menuC.mainDish, this.dessert, this.menuC.categories)
 
         await api.putMenu(menuePostA)
         await api.putMenu(menuPostB)
@@ -179,8 +182,10 @@ export default {
           vm.currentDate = new Date(vm.$store.getters.getCurrentMenues[0].date)
           vm.vorspeise = vm.$store.getters.getCurrentMenues[0].appetizer
           vm.dessert = vm.$store.getters.getCurrentMenues[0].dessert
-          const resp = await api.getRecommendationForDay(vm.$store.getters.getCurrentMenues[0].date, vm.$keycloak.idTokenParsed.preferred_username)
-          vm.recommendedLetter = resp.data
+          if (vm.$keycloak.hasRealmRole('mitarbeiter')) {
+            const resp = await api.getRecommendationForDay(vm.$store.getters.getCurrentMenues[0].date, vm.$keycloak.idTokenParsed.preferred_username)
+            vm.recommendedLetter = resp.data
+          }
         }
       }
     })

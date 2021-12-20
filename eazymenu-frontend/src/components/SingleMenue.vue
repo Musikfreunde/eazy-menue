@@ -13,6 +13,19 @@
       <b-card-text>
         <b-form-input class="menueNameInput" trim v-model="currentMenue.mainDish" v-if="$keycloak.hasRealmRole('kantine')" @input="updateParent"></b-form-input>
        <a id="mainDishText" :href="getGoogleSearchLink(this.currentMenue.mainDish)" target="_blank" v-if="$keycloak.hasRealmRole('mitarbeiter')"><strong>{{this.currentMenue.mainDish}}</strong></a>
+        <b-button v-if="$keycloak.hasRealmRole('kantine')" :id="'popover-target'+code" variant="primary" style="margin-top: 5px">
+          Kategorien
+        </b-button>
+        <b-popover :target="'popover-target'+code" triggers="hover" placement="left">
+          <template #title>Kategorien</template>
+          <!-- eslint-disable -->
+          <ul v-for="category in categories">
+            <input :id="category" :value="category" name="product" type="checkbox" v-model="checkedCategories" style="margin-right: 5px"/>
+            <label :for="category"><strong>{{category}}</strong></label>
+          </ul>
+          <!-- eslint-enable -->
+        </b-popover>
+
       </b-card-text>
 
       <b-button @click="order"
@@ -21,30 +34,38 @@
                 :disabled="!showBestellen"
                 >Bestellen</b-button>
     </b-card>
-    <h2 v-if="$keycloak.hasRealmRole('mitarbeiter') && isRecommended === true"></h2>
   </section>
 
 </template>
 
 <script lang="js">
-
+import { api } from '../api'
 export default {
   name: 'single-menue',
   props: {
-    code: String,
-    isRecommended: String
+    code: String
   },
   data () {
     return {
-      name: ''
+      name: '',
+      checkedCategories: [],
+      categories: this.getAllCategories()
     }
   },
   methods: {
+    mounted () {
+      this.getAllCategories()
+    },
     getGoogleSearchLink (menuName) {
       return 'https://www.google.com/search?tbm=isch&q=' + menuName
     },
     updateParent () {
       this.$emit('update:name', this.currentMenue)
+    },
+    async getAllCategories () {
+      const response = await api.getAllCategories()
+      console.log(response.data)
+      this.categories = response.data
     },
     order () {
       if (this.showBestellen) {
@@ -68,7 +89,10 @@ export default {
         this.$emit('update:name', { mainDish: '' })
         return { mainDish: '' }
       } else {
-        const menueForCode = this.$store.getters.getCurrentMenueForCode(this.code)
+        // eslint-disable-next-line
+        let menueForCode = this.$store.getters.getCurrentMenueForCode(this.code)
+        menueForCode.categories = this.checkedCategories.join(';')
+        console.log(menueForCode)
         this.$emit('update:name', menueForCode)
         return menueForCode
       }
@@ -79,9 +103,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  h2{
-    color:green
-  }
   .single-menue {
 
   }

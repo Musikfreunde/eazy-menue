@@ -6,6 +6,7 @@ import store from './store'
 import Vue from 'vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import keycloakplugin from './keycloakplugin'
+import VueGoogleCharts from 'vue-google-charts'
 import { api } from './api'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -25,6 +26,7 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(keycloakplugin)
 Vue.use(api)
+Vue.use(VueGoogleCharts)
 
 Vue.use(VueHtmlToPaper, options)
 Vue.$keycloak
