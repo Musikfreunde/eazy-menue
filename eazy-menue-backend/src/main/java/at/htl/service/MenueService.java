@@ -39,4 +39,11 @@ public class MenueService {
         return Response.ok(menueRepository.getRecommendation(name,date).getCode()).build();
     }
 
+    @Path("/{date}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getMenuesByDate(@PathParam("date") String date) {
+        return Response.ok(menueRepository.getMenuesByDate(date)).build();
+    }
+
 }

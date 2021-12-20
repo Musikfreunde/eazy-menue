@@ -47,9 +47,5 @@ public class BestellungService {
         return Response.ok(bestellungRepository.addOrder(bestellungDTO)).build();
     }
 
-    @PUT
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response deleteOrder(@QueryParam("id") Long id){
-        return Response.ok(bestellungRepository.deleteOrderById(id)).build();
-    }
+
 }
