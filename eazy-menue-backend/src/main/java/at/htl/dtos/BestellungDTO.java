@@ -1,6 +1,7 @@
 package at.htl.dtos;
 
 public class BestellungDTO {
+
     private Long id;
 
     private String orderedBy;

@@ -3,6 +3,7 @@ package at.htl.repositories;
 import at.htl.dtos.BestellungDTO;
 import at.htl.dtos.BestellungHistoryDTO;
 import at.htl.dtos.BestellungKantineDTO;
+import at.htl.dtos.BestellungStatDTO;
 import at.htl.entities.Bestellung;
 import at.htl.entities.Categories;
 import at.htl.entities.Menue;
@@ -100,5 +101,45 @@ public class BestellungRepository implements PanacheRepository<Bestellung> {
 
     public List<String> getALlCategories(){
         return Stream.of(Categories.values()).map(Categories::name).collect(Collectors.toList());
+    }
+
+    public List<BestellungStatDTO> getALlCategoriesByUsernameForStats(String name) {
+
+        List<String> distCat = getALlCategoriesByUsername(name);
+        List<BestellungStatDTO> stats = new LinkedList<>();
+
+        TypedQuery<String> query = this.getEntityManager().createNamedQuery("Bestellung.getALlCategoriesByUsernameForStats", String.class)
+                .setParameter("name", name);
+        List<String> categories = new LinkedList<>();
+        query.getResultList().forEach(c -> {
+            if (c.contains(";")){
+                String[] categoriesArray = c.split(";");
+                categories.addAll(Arrays.asList(categoriesArray));
+            }
+            else{categories.add(c);}
+        });
+
+        for (String s : distCat){
+            int count = 0;
+            for (String cat : categories){
+                if (cat.equals(s)){
+                    count++;
+                }
+            }
+            stats.add(new BestellungStatDTO(s,count));
+        }
+
+
+        return stats;
+
+        /*Query query  = this.getEntityManager().createNamedQuery("Bestellung.getALlCategoriesByUsernameForStats", Object[].class)
+                .setParameter("name", name);
+
+        return (List) query.getResultList().stream().map(m -> {
+            Object[] temp = (Object[]) m;
+
+            return new BestellungStatDTO(temp[0].toString(),(Long) temp[1]);
+        }).collect(Collectors.toList());*/
+
     }
 }

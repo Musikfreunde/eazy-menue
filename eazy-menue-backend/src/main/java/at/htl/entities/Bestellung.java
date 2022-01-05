@@ -16,9 +16,11 @@ import java.util.Objects;
         @NamedQuery(name = "Bestellung.getALlCategoriesByUsername",
                 query = "select b.menue.categories from Bestellung b where b.orderedFor = :name group by b.menue.categories order by count(b) DESC"),
         @NamedQuery(name = "Bestellung.getALlCategories",
-                query = "select DISTINCT(b.menue.categories) from Bestellung b ")
-
+                query = "select DISTINCT(b.menue.categories) from Bestellung b "),
+        @NamedQuery(name = "Bestellung.getALlCategoriesByUsernameForStats",
+                query = "select b.menue.categories from Bestellung b where b.orderedFor = :name")
 })
+
 public class Bestellung {
     @SequenceGenerator(name = "bestellung_seq_gen", sequenceName = "BESTELLUNG_SEQ",allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bestellung_seq_gen")
