@@ -37,20 +37,17 @@
         <b-col>
           <single-menue v-bind:name.sync="menuA" v-if="($store.state.currentMenues.length !== 0
           && $store.getters.getCurrentMenueForCode('A') !== undefined)
-          || this.$keycloak.hasRealmRole('kantine')" code="A"/>
-          <h2 v-if="recommendedLetter !== '' && recommendedLetter === 'A'" >Empfohlen!</h2>
+          || this.$keycloak.hasRealmRole('kantine')" code="A" :is-recomended="recommendedLetter !== '' && recommendedLetter === 'A'"/>
         </b-col>
         <b-col>
           <single-menue v-bind:name.sync="menuB" v-if="($store.state.currentMenues.length !== 0
           && $store.getters.getCurrentMenueForCode('B') !== undefined)
-          || this.$keycloak.hasRealmRole('kantine')" code="B"/>
-          <h2 v-if="recommendedLetter !== '' && recommendedLetter === 'B'" >Empfohlen!</h2>
+          || this.$keycloak.hasRealmRole('kantine')" code="B" :is-recomended="recommendedLetter !== '' && recommendedLetter === 'B'"/>
         </b-col>
         <b-col>
           <single-menue v-bind:name.sync="menuC" v-if="($store.state.currentMenues.length !== 0
           && $store.getters.getCurrentMenueForCode('C') !== undefined)
-          || this.$keycloak.hasRealmRole('kantine')" code="C"/>
-          <h2 v-if="recommendedLetter !== '' && recommendedLetter === 'C'" >Empfohlen!</h2>
+          || this.$keycloak.hasRealmRole('kantine')" code="C" :is-recomended="recommendedLetter !== '' && recommendedLetter === 'C'"/>
         </b-col>
       </b-row>
       <b-row>

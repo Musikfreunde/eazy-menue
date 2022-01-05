@@ -38,7 +38,7 @@ public class MenueRepository implements PanacheRepository<Menue> {
         newMenue.setAppetizer(menueDTO.getAppetizer());
         newMenue.setMainDish(menueDTO.getMainDish());
         newMenue.setDessert(menueDTO.getDessert());
-        newMenue.setDate(LocalDate.parse(menueDTO.getDate()));
+        newMenue.setDate(LocalDate.parse(menueDTO.getDate().substring(0,10)));
         newMenue.setCode(menueDTO.getCode());
         newMenue.setCategories(menueDTO.getCategories());
 

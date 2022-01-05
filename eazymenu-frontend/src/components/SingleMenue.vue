@@ -8,11 +8,13 @@
       img-top
       tag="article"
       class="mb-2"
+      :style="isRecomended ? { 'color': 'green' } : null"
     >
-      <img src="../assets/food-icon.png" alt="Food Icon">
+      <img v-if="!isRecomended" src="../assets/food-icon.png" alt="Food Icon">
+      <img v-if="isRecomended" src="../assets/food-icon-green.png" alt="Food Icon">
       <b-card-text>
         <b-form-input class="menueNameInput" trim v-model="currentMenue.mainDish" v-if="$keycloak.hasRealmRole('kantine')" @input="updateParent"></b-form-input>
-       <a id="mainDishText" :href="getGoogleSearchLink(this.currentMenue.mainDish)" target="_blank" v-if="$keycloak.hasRealmRole('mitarbeiter')"><strong>{{this.currentMenue.mainDish}}</strong></a>
+       <a id="mainDishText" :href="getGoogleSearchLink(this.currentMenue.mainDish)" target="_blank" :style="isRecomended ? { 'color': 'green' } : null" v-if="$keycloak.hasRealmRole('mitarbeiter')" ><strong>{{this.currentMenue.mainDish}}</strong></a>
         <b-button v-if="$keycloak.hasRealmRole('kantine')" :id="'popover-target'+code" variant="primary" style="margin-top: 5px">
           Kategorien
         </b-button>
@@ -43,7 +45,8 @@ import { api } from '../api'
 export default {
   name: 'single-menue',
   props: {
-    code: String
+    code: String,
+    isRecomended: Boolean
   },
   data () {
     return {
@@ -85,13 +88,21 @@ export default {
       return false
     },
     currentMenue: function () {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.checkedCategories = []
       if (this.$store.getters.getCurrentMenueForCode(this.code) === undefined) {
         this.$emit('update:name', { mainDish: '' })
         return { mainDish: '' }
       } else {
         // eslint-disable-next-line
         let menueForCode = this.$store.getters.getCurrentMenueForCode(this.code)
-        menueForCode.categories = this.checkedCategories.join(';')
+        if (menueForCode.categories != null) {
+          const splitted = menueForCode.categories.split(';')
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.checkedCategories = splitted
+        } else {
+          menueForCode.categories = this.checkedCategories.join(';')
+        }
         console.log(menueForCode)
         this.$emit('update:name', menueForCode)
         return menueForCode

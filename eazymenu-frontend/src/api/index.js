@@ -36,7 +36,10 @@ export const api = {
     return axios.get(this.HOST_URL + '/bestellung/categories')
   },
   async getCategoriesForUserName (userName) {
-    return axios.get(this.HOST_URL + '/bestellung/categories/' + userName)
+    return axios.get(this.HOST_URL + '/bestellung/stats/categories/' + userName)
+  },
+  async getWeekDaysForUserName (userName) {
+    return axios.get(this.HOST_URL + '/bestellung/stats/' + userName)
   },
   isOnSameDay (date1, date2) {
     date1.setHours(0, 0, 0, 0)
