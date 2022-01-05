@@ -1,9 +1,6 @@
 package at.htl.repositories;
 
-import at.htl.dtos.BestellungDTO;
-import at.htl.dtos.BestellungHistoryDTO;
-import at.htl.dtos.BestellungKantineDTO;
-import at.htl.dtos.BestellungStatDTO;
+import at.htl.dtos.*;
 import at.htl.entities.Bestellung;
 import at.htl.entities.Categories;
 import at.htl.entities.Menue;
@@ -14,10 +11,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -140,6 +137,57 @@ public class BestellungRepository implements PanacheRepository<Bestellung> {
 
             return new BestellungStatDTO(temp[0].toString(),(Long) temp[1]);
         }).collect(Collectors.toList());*/
+
+    }
+
+    public List<WeekDaysDTO> getDaysOfWeekByUser(String user) throws ParseException {
+        List<BestellungHistoryDTO> orders = getOrdersOfUser(user);
+
+        List<String> dates = new LinkedList<>();
+
+        for (BestellungHistoryDTO o : orders){
+            dates.add(o.getMenueDate());
+        }
+
+        HashMap<String, WeekDaysDTO> weekDays = new HashMap();
+
+
+        weekDays.put("Montag",new WeekDaysDTO("Montag",0));
+        weekDays.put("Dienstag", new WeekDaysDTO("Dienstag",0));
+        weekDays.put("Mittwoch", new WeekDaysDTO("Mittwoch",0));
+        weekDays.put("Donnerstag",new WeekDaysDTO("Donnerstag",0));
+
+        for (String d : dates){
+            Calendar c = Calendar.getInstance();
+
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(d);
+
+            c.setTime(date);
+            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+
+            if (dayOfWeek == 2){
+                WeekDaysDTO week = weekDays.get("Montag");
+                week.amount++;
+                weekDays.replace("Montag",week);
+            }
+            if (dayOfWeek == 3){
+                WeekDaysDTO week = weekDays.get("Dienstag");
+                week.amount++;
+                weekDays.replace("Dienstag",week);
+            }
+            if (dayOfWeek == 4){
+                WeekDaysDTO week = weekDays.get("Mittwoch");
+                week.amount++;
+                weekDays.replace("Mittwoch",week);
+            }
+            if (dayOfWeek == 5){
+                WeekDaysDTO week = weekDays.get("Donnerstag");
+                week.amount++;
+                weekDays.replace("Donnerstag",week);
+            }
+        }
+
+        return weekDays.values().stream().collect(Collectors.toList());
 
     }
 }

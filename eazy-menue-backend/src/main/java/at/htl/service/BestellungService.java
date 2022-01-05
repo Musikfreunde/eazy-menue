@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.text.ParseException;
 
 @Path("/menue/bestellung")
 public class BestellungService {
@@ -19,6 +20,14 @@ public class BestellungService {
     public Response getOrdersOfUser(@PathParam("name") String name) {
         return Response.ok(bestellungRepository.getOrdersOfUser(name)).build();
     }
+
+    @GET
+    @Path("/stats/{name}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getDaysOfWeekByUser(@PathParam("name") String name) throws ParseException {
+        return Response.ok(bestellungRepository.getDaysOfWeekByUser(name)).build();
+    }
+
 
     @GET
     @Path("/categories/{name}")

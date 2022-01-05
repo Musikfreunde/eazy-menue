@@ -6,7 +6,6 @@ public class BestellungDTO {
 
     private String orderedBy;
 
-
     private int amount;
 
     private String comment;
