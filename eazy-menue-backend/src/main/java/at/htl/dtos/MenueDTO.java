@@ -15,24 +15,17 @@ public class MenueDTO {
 
     private String categories;
 
-    public String getCategories() {
-        return categories;
-    }
-
-    public void setCategories(String categories) {
-        this.categories = categories;
-    }
-
     public MenueDTO() {
     }
 
-    public MenueDTO(Long id, String date, char code, String appetizer, String mainDish, String desert) {
+    public MenueDTO(Long id, String date, char code, String appetizer, String mainDish, String desert, String categories) {
         this.id = id;
         this.date = date;
         this.code = code;
         this.appetizer = appetizer;
         this.mainDish = mainDish;
         this.dessert = desert;
+        this.categories = categories;
     }
 
 
@@ -83,4 +76,14 @@ public class MenueDTO {
     public void setDessert(String dessert) {
         this.dessert = dessert;
     }
+
+    public String getCategories() {
+        return categories;
+    }
+
+    public void setCategories(String categories) {
+        this.categories = categories;
+    }
+
+
 }

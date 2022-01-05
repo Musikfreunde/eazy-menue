@@ -27,7 +27,7 @@ public class MenueRepository implements PanacheRepository<Menue> {
         return (List) query.getResultList().stream().map( m ->{
             Object[] temp = (Object[]) m;
             return new MenueDTO((Long)temp[0],((LocalDate)temp[1]).toString(),(char)temp[2],(String) temp[3],
-                    (String)temp[4],(String)temp[5]);
+                    (String)temp[4],(String)temp[5], (String) temp[6]);
         }).collect(Collectors.toList());
     }
 

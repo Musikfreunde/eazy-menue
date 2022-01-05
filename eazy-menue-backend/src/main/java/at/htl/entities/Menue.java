@@ -9,7 +9,7 @@ import java.util.List;
 @Table(name = "MENUE")
 @NamedQueries({
         @NamedQuery(name="Menue.getAllMenues",
-                query="SELECT m.id, m.date, m.code, m.appetizer, m.mainDish, m.desert FROM Menue m ORDER BY m.createdAt DESC"
+                query="SELECT m.id, m.date, m.code, m.appetizer, m.mainDish, m.desert, m.categories FROM Menue m ORDER BY m.createdAt DESC"
         ),
         @NamedQuery(name="Menue.getById",
                 query = "select m from Menue m where m.id = :id"
