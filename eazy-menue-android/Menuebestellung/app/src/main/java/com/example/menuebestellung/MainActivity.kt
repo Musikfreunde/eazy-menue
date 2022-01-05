@@ -59,35 +59,38 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 Scaffold(
                     bottomBar = {
-                        BottomNavigationBar(
-                            items = listOf(
 
-                                BottomNavItem(
-                                    name = "Login",
-                                    route = "login",
-                                    icon = Icons.Default.AccountCircle
+                        if (isLoggedIn.value) {
+                            BottomNavigationBar(
+                                items = listOf(
+
+                                    BottomNavItem(
+                                        name = "Login",
+                                        route = "login",
+                                        icon = Icons.Default.AccountCircle
+                                    ),
+                                    BottomNavItem(
+                                        name = "Uebersicht",
+                                        route = "uebersicht",
+                                        icon = Icons.Default.Info
+                                    ),
+                                    BottomNavItem(
+                                        name = "Verlauf",
+                                        route = "verlauf",
+                                        icon = Icons.Default.List
+                                    ),
+                                    BottomNavItem(
+                                        name = "Stats",
+                                        route = "stats",
+                                        icon = Icons.Default.Settings
+                                    )
                                 ),
-                                BottomNavItem(
-                                    name = "Uebersicht",
-                                    route = "uebersicht",
-                                    icon = Icons.Default.Info
-                                ),
-                                BottomNavItem(
-                                    name = "Verlauf",
-                                    route = "verlauf",
-                                    icon = Icons.Default.List
-                                ),
-                                BottomNavItem(
-                                    name = "Stats",
-                                    route = "stats",
-                                    icon = Icons.Default.Settings
-                                )
-                            ),
-                            navController = navController,
-                            onItemClick = {
-                                navController.navigate(it.route)
-                            }
-                        )
+                                navController = navController,
+                                onItemClick = {
+                                    navController.navigate(it.route)
+                                }
+                            )
+                        }
                     }
                 ) {
                     Navigation(navController = navController)
@@ -191,11 +194,12 @@ fun DatePicker(context: Context, navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Button(onClick = {
-            datePickerDialog.show()
-        },
-        enabled = isLoggedIn.value
-            ) {
+        Button(
+            onClick = {
+                datePickerDialog.show()
+            },
+            enabled = isLoggedIn.value
+        ) {
             Text(text = "Open Date Picker")
         }
         Text(
