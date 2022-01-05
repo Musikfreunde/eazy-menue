@@ -2,11 +2,13 @@ package com.example.menuebestellung
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.items
@@ -41,6 +43,9 @@ import java.io.IOException
 import java.lang.reflect.Type
 import java.util.*
 import okhttp3.*
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 class MainActivity : ComponentActivity() {
@@ -61,35 +66,35 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
 
                         if (isLoggedIn.value) {
-                            BottomNavigationBar(
-                                items = listOf(
+                                BottomNavigationBar(
+                                    items = listOf(
 
-                                    BottomNavItem(
-                                        name = "Login",
-                                        route = "login",
-                                        icon = Icons.Default.AccountCircle
+                                        BottomNavItem(
+                                            name = "Login",
+                                            route = "login",
+                                            icon = Icons.Default.AccountCircle
+                                        ),
+                                        BottomNavItem(
+                                            name = "Uebersicht",
+                                            route = "uebersicht",
+                                            icon = Icons.Default.Info
+                                        ),
+                                        BottomNavItem(
+                                            name = "Verlauf",
+                                            route = "verlauf",
+                                            icon = Icons.Default.List
+                                        ),
+                                        BottomNavItem(
+                                            name = "Stats",
+                                            route = "stats",
+                                            icon = Icons.Default.Settings
+                                        )
                                     ),
-                                    BottomNavItem(
-                                        name = "Uebersicht",
-                                        route = "uebersicht",
-                                        icon = Icons.Default.Info
-                                    ),
-                                    BottomNavItem(
-                                        name = "Verlauf",
-                                        route = "verlauf",
-                                        icon = Icons.Default.List
-                                    ),
-                                    BottomNavItem(
-                                        name = "Stats",
-                                        route = "stats",
-                                        icon = Icons.Default.Settings
-                                    )
-                                ),
-                                navController = navController,
-                                onItemClick = {
-                                    navController.navigate(it.route)
-                                }
-                            )
+                                    navController = navController,
+                                    onItemClick = {
+                                        navController.navigate(it.route)
+                                    }
+                                )
                         }
                     }
                 ) {
@@ -127,11 +132,13 @@ fun Navigation(navController: NavHostController) {
     }
 }
 
+var uebersichtDate = mutableStateOf("")
+var menueIsInThePast = mutableStateOf(false)
 
+@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalFoundationApi
 @Composable
 fun UebersichScreen(navController: NavHostController) {
-
 
     DatePicker(context = LocalContext.current, navController)
 
@@ -159,6 +166,7 @@ fun UebersichScreen(navController: NavHostController) {
 
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DatePicker(context: Context, navController: NavHostController) {
 
@@ -179,12 +187,23 @@ fun DatePicker(context: Context, navController: NavHostController) {
         context,
         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
             if (dayOfMonth >= 1 && dayOfMonth <= 9) {
-
-                date.value = "$year-${month.inc()}-0$dayOfMonth"
+                var temp = month.inc()
+                if (temp.toString().length == 1) {
+                    date.value = "$year-0${temp}-0$dayOfMonth"
+                }
+                else{
+                    date.value = "$year-${temp}-0$dayOfMonth"
+                }
             } else {
-                date.value = "$year-$month-$dayOfMonth"
+                if (month.toString().length == 1) {
+                    date.value = "$year-0${month}-0$dayOfMonth"
+                }
+                else{
+                    date.value = "$year-${month}-0$dayOfMonth"
+                }
             }
             getMenuesForDate(date.value)
+            uebersichtDate.value = date.value
             navController.navigate("uebersicht")
         }, year, month, day
     )
@@ -203,7 +222,7 @@ fun DatePicker(context: Context, navController: NavHostController) {
             Text(text = "Open Date Picker")
         }
         Text(
-            text = "Selected Date: ${date.value}"
+            text = "Selected Date: ${uebersichtDate.value}"
         )
 
     }
@@ -239,7 +258,8 @@ fun CardDemo(menue: Menue, navController: NavHostController) {
                         modifier = Modifier.padding(12.dp)
                     )
                 }
-                Button(onClick = {
+                Button(enabled = !menueIsInThePast.value,
+                    onClick = {
                     if (isLoggedIn.value) {
                         navController.navigate("bestellen")
                     }
@@ -342,6 +362,45 @@ fun BestellungItem(bestellung: Bestellung) {
 }
 
 
+var oeffnungszeitenChecked = mutableStateOf(false)
+
+@Composable
+fun OeffnungszeitenItem(oeffnungszeiten: Oeffnungszeiten) {
+
+
+    val checkedState = remember { mutableStateOf(oeffnungszeiten.chosen) }
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        Text(
+            text = oeffnungszeiten.time,
+            fontSize = 18.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(12.dp)
+        )
+        Checkbox(
+            checked = checkedState.value,
+            onCheckedChange = {
+                checkedState.value = it
+            }
+        )
+        Text(
+            text = oeffnungszeiten.maxSeats.toString(),
+            fontSize = 18.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(12.dp)
+
+        )
+
+    }
+
+}
+
+
 @Composable
 fun StatsScreen(navController: NavHostController) {
     Box(
@@ -359,7 +418,7 @@ var currUser = mutableStateOf("");
 @Composable
 fun LoginScreen(navController: NavHostController) {
 
-
+    getOeffnungszeiten()
     val context = LocalContext.current
     var name by remember {
         mutableStateOf("")
@@ -425,9 +484,13 @@ fun LoginScreen(navController: NavHostController) {
 var bestellungErsteller = mutableStateOf("")
 var bestellungDate = mutableStateOf("")
 var bestellungMenue = mutableStateOf("")
+var bestellungComment = mutableStateOf("")
+var bestellungCount = mutableStateOf(1)
+var isOne = mutableStateOf(true)
 
 @Composable
 fun BestellenScreen(navController: NavHostController) {
+
 
     Column() {
         Row() {
@@ -445,7 +508,7 @@ fun BestellenScreen(navController: NavHostController) {
             TextField(
                 value = date,
                 onValueChange = { date = it },
-                label = { Text("Ersteller") }
+                label = { Text("Date") }
             )
         }
         Row() {
@@ -454,11 +517,100 @@ fun BestellenScreen(navController: NavHostController) {
             TextField(
                 value = menue,
                 onValueChange = { menue = it },
-                label = { Text("Ersteller") }
+                label = { Text("Menue") }
             )
         }
-    }
+        Row() {
+            Button(
+                enabled = !isOne.value,
+                onClick = { bestellungCount.value = bestellungCount.value - 1 }) {
+                Text(text = "-")
+                if (bestellungCount.value == 1)
+                    isOne.value = true;
+            }
+            var count by remember { mutableStateOf(bestellungCount.value) }
 
+            TextField(
+                value = bestellungCount.value.toString(),
+                onValueChange = { bestellungCount.value = count },
+                modifier = Modifier.width(90.dp)
+            )
+
+            Button(onClick = { bestellungCount.value = bestellungCount.value + 1 }) {
+                Text(text = "+")
+                if (bestellungCount.value != 1)
+                    isOne.value = false;
+            }
+        }
+        Row() {
+            var comment by remember { mutableStateOf(bestellungComment.value) }
+
+            TextField(
+                value = comment,
+                onValueChange = { comment = it },
+                label = { Text("Kommentar") }
+            )
+        }
+        Row() {
+            Button(
+                onClick = {
+                    isLoggedIn.value = true
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green)
+            ) {
+                Text(text = "Abschließen")
+            }
+            Button(
+                onClick = {
+                    navController.navigate("uebersicht")
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+            ) {
+                Text(text = "Abbrechen")
+            }
+        }
+        Row() {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                LazyColumn() {
+                    item {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                        ) {
+                            Text(
+                                text = "Zeit",
+                                fontSize = 25.sp,
+                                color = Color.Gray,
+                                modifier = Modifier.padding(12.dp)
+                            )
+                            Text(
+                                text = "Auswahl",
+                                fontSize = 25.sp,
+                                color = Color.Gray,
+                                modifier = Modifier.padding(12.dp)
+                            )
+                            Text(
+                                text = "Freie Plätze",
+                                fontSize = 25.sp,
+                                color = Color.Gray,
+                                modifier = Modifier.padding(12.dp)
+                            )
+
+                        }
+
+                    }
+                    items(oeffnungszeiten.toMutableStateList()) { oeffnungszeiten ->
+                        OeffnungszeitenItem(oeffnungszeiten = oeffnungszeiten)
+                    }
+                }
+            }
+        }
+    }
 
 }
 
@@ -521,6 +673,7 @@ val client = OkHttpClient()
 var menues: Collection<Menue> = mutableStateListOf<Menue>()
 var menuesFilteredByDate: Collection<Menue> = mutableStateListOf<Menue>()
 var bestellungen: Collection<Bestellung> = mutableStateListOf<Bestellung>()
+var oeffnungszeiten: Collection<Oeffnungszeiten> = mutableStateListOf<Oeffnungszeiten>()
 
 fun InitMenues(): Collection<Menue> {
 
@@ -602,7 +755,12 @@ fun <T> SnapshotStateList<T>.swapList(newList: Collection<T>) {
     addAll(newList)
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun getMenuesForDate(date: String) {
+    var i = LocalDateTime.now().hour
+    if (date <= LocalDateTime.now().toString().take(10) && LocalDateTime.now().hour < 9) {
+        menueIsInThePast.value = true
+    }
     menuesFilteredByDate = menuesFilteredByDate - menuesFilteredByDate
     menues.sortedBy { menue -> menue.date }.sortedBy { menue -> menue.code }.forEach { menu ->
         if (menu.date == date) {
@@ -612,4 +770,36 @@ fun getMenuesForDate(date: String) {
 
     }
 
+}
+
+fun getOeffnungszeiten() {
+    val url = "http://10.0.2.2:8080/menue/oeffnungszeiten"
+
+    val request = Request.Builder()
+        .url(url)
+        .build()
+
+    client.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            e.printStackTrace()
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+                println("-----------------------------------------------------------------------")
+                println("-----------------------------------------------------------------------")
+                println("------------------------Oeffnungszeiten--------------------------")
+                println("-----------------------------------------------------------------------")
+
+
+                val gson = GsonBuilder().create()
+
+                val collectionType: Type =
+                    object : TypeToken<Collection<Oeffnungszeiten?>?>() {}.type
+                oeffnungszeiten = gson.fromJson(response.body!!.string(), collectionType)
+            }
+        }
+    })
 }
