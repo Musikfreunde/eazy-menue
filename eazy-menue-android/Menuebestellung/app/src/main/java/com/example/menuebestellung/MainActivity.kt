@@ -186,8 +186,9 @@ fun DatePicker(context: Context, navController: NavHostController) {
     val datePickerDialog = DatePickerDialog(
         context,
         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+            var temp = month.inc()
             if (dayOfMonth >= 1 && dayOfMonth <= 9) {
-                var temp = month.inc()
+
                 if (temp.toString().length == 1) {
                     date.value = "$year-0${temp}-0$dayOfMonth"
                 }
@@ -195,11 +196,11 @@ fun DatePicker(context: Context, navController: NavHostController) {
                     date.value = "$year-${temp}-0$dayOfMonth"
                 }
             } else {
-                if (month.toString().length == 1) {
-                    date.value = "$year-0${month}-0$dayOfMonth"
+                if (temp.toString().length == 1) {
+                    date.value = "$year-0${temp}-$dayOfMonth"
                 }
                 else{
-                    date.value = "$year-${month}-0$dayOfMonth"
+                    date.value = "$year-${temp}-$dayOfMonth"
                 }
             }
             getMenuesForDate(date.value)
@@ -758,7 +759,7 @@ fun <T> SnapshotStateList<T>.swapList(newList: Collection<T>) {
 @RequiresApi(Build.VERSION_CODES.O)
 fun getMenuesForDate(date: String) {
     var i = LocalDateTime.now().hour
-    if (date <= LocalDateTime.now().toString().take(10) && LocalDateTime.now().hour < 9) {
+    if (date <= LocalDateTime.now().toString().take(10) && LocalDateTime.now().hour > 9) {
         menueIsInThePast.value = true
     }
     menuesFilteredByDate = menuesFilteredByDate - menuesFilteredByDate
