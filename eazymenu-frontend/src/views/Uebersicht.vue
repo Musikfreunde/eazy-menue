@@ -127,7 +127,11 @@ export default {
 
         if (this.$keycloak.hasRealmRole('mitarbeiter')) {
           const resp = await api.getRecommendationForDay(this.$store.getters.getCurrentMenues[0].date, this.$keycloak.idTokenParsed.preferred_username)
-          this.recommendedLetter = resp.data
+          if (resp.data === null) {
+            this.recommendedLetter = ''
+          } else {
+            this.recommendedLetter = resp.data
+          }
         }
       } else {
         this.vorspeise = ''
@@ -181,7 +185,11 @@ export default {
           vm.dessert = vm.$store.getters.getCurrentMenues[0].dessert
           if (vm.$keycloak.hasRealmRole('mitarbeiter')) {
             const resp = await api.getRecommendationForDay(vm.$store.getters.getCurrentMenues[0].date, vm.$keycloak.idTokenParsed.preferred_username)
-            vm.recommendedLetter = resp.data
+            if (resp.data === null) {
+              vm.recommendedLetter = ''
+            } else {
+              vm.recommendedLetter = resp.data
+            }
           }
         }
       }

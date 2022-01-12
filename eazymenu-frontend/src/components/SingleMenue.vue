@@ -89,20 +89,14 @@ export default {
     },
     currentMenue: function () {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.checkedCategories = []
       if (this.$store.getters.getCurrentMenueForCode(this.code) === undefined) {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.$emit('update:name', { mainDish: '' })
         return { mainDish: '' }
       } else {
         // eslint-disable-next-line
         let menueForCode = this.$store.getters.getCurrentMenueForCode(this.code)
-        if (menueForCode.categories != null) {
-          const splitted = menueForCode.categories.split(';')
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          this.checkedCategories = splitted
-        } else {
-          menueForCode.categories = this.checkedCategories.join(';')
-        }
+        menueForCode.categories = this.checkedCategories.join(';')
         console.log(menueForCode)
         this.$emit('update:name', menueForCode)
         return menueForCode
