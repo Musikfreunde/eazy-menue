@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.composable
@@ -37,12 +39,18 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.menuebestellung.ui.theme.MenuebestellungTheme
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import me.bytebeats.views.charts.pie.PieChart
+import me.bytebeats.views.charts.pie.PieChartData
+import me.bytebeats.views.charts.pie.render.SimpleSliceDrawer
+import me.bytebeats.views.charts.simpleChartAnimation
 import java.io.IOException
 import java.lang.reflect.Type
 import java.util.*
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -51,6 +59,7 @@ import java.time.LocalDateTime
 class MainActivity : ComponentActivity() {
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @ExperimentalFoundationApi
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,35 +75,35 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
 
                         if (isLoggedIn.value) {
-                                BottomNavigationBar(
-                                    items = listOf(
+                            BottomNavigationBar(
+                                items = listOf(
 
-                                        BottomNavItem(
-                                            name = "Login",
-                                            route = "login",
-                                            icon = Icons.Default.AccountCircle
-                                        ),
-                                        BottomNavItem(
-                                            name = "Uebersicht",
-                                            route = "uebersicht",
-                                            icon = Icons.Default.Info
-                                        ),
-                                        BottomNavItem(
-                                            name = "Verlauf",
-                                            route = "verlauf",
-                                            icon = Icons.Default.List
-                                        ),
-                                        BottomNavItem(
-                                            name = "Stats",
-                                            route = "stats",
-                                            icon = Icons.Default.Settings
-                                        )
+                                    BottomNavItem(
+                                        name = "Login",
+                                        route = "login",
+                                        icon = Icons.Default.AccountCircle
                                     ),
-                                    navController = navController,
-                                    onItemClick = {
-                                        navController.navigate(it.route)
-                                    }
-                                )
+                                    BottomNavItem(
+                                        name = "Uebersicht",
+                                        route = "uebersicht",
+                                        icon = Icons.Default.Info
+                                    ),
+                                    BottomNavItem(
+                                        name = "Verlauf",
+                                        route = "verlauf",
+                                        icon = Icons.Default.List
+                                    ),
+                                    BottomNavItem(
+                                        name = "Stats",
+                                        route = "stats",
+                                        icon = Icons.Default.Settings
+                                    )
+                                ),
+                                navController = navController,
+                                onItemClick = {
+                                    navController.navigate(it.route)
+                                }
+                            )
                         }
                     }
                 ) {
@@ -109,6 +118,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalFoundationApi
 @Composable
 fun Navigation(navController: NavHostController) {
@@ -191,15 +201,13 @@ fun DatePicker(context: Context, navController: NavHostController) {
 
                 if (temp.toString().length == 1) {
                     date.value = "$year-0${temp}-0$dayOfMonth"
-                }
-                else{
+                } else {
                     date.value = "$year-${temp}-0$dayOfMonth"
                 }
             } else {
                 if (temp.toString().length == 1) {
                     date.value = "$year-0${temp}-$dayOfMonth"
-                }
-                else{
+                } else {
                     date.value = "$year-${temp}-$dayOfMonth"
                 }
             }
@@ -261,15 +269,17 @@ fun CardDemo(menue: Menue, navController: NavHostController) {
                 }
                 Button(enabled = !menueIsInThePast.value,
                     onClick = {
-                    if (isLoggedIn.value) {
-                        navController.navigate("bestellen")
-                    }
-                }) {
+                        if (isLoggedIn.value) {
+                            navController.navigate("bestellen")
+                        }
+                    }) {
                     Text(text = "Bestellen")
                 }
             }
         }
     }
+
+    bestellungMenueId.value = menue.id
     bestellungMenue.value = menue.mainDish
     bestellungDate.value = menue.date
     bestellungErsteller.value = currUser.value
@@ -404,17 +414,48 @@ fun OeffnungszeitenItem(oeffnungszeiten: Oeffnungszeiten) {
 
 @Composable
 fun StatsScreen(navController: NavHostController) {
-    Box(
+    /*PieChart(
+        pieChartData = PieChartData(
+            slices = listOf(
+                PieChartData.Slice(
+                    randomLength(),
+                    randomColor()
+                ),
+                PieChartData.Slice(randomLength(), randomColor()),
+                PieChartData.Slice(randomLength(), randomColor())
+            )
+        ),
+        // Optional properties.
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "Stats screen")
-    }
+        animation = simpleChartAnimation(),
+        sliceDrawer = SimpleSliceDrawer()
+    )*/
 }
-
+/*private val colors = mutableListOf<Color>(
+    Color(0XFFF44336),
+    Color(0XFFE91E63),
+    Color(0XFF9C27B0),
+    Color(0XFF673AB7),
+    Color(0XFF3F51B5),
+    Color(0XFF03A9F4),
+    Color(0XFF009688),
+    Color(0XFFCDDC39),
+    Color(0XFFFFC107),
+    Color(0XFFFF5722),
+    Color(0XFF795548),
+    Color(0XFF9E9E9E),
+    Color(0XFF607D8B)
+)
+private fun randomLength(): Float = Default.nextInt(10, 30).toFloat()
+private fun randomColor(): Color {
+    val randomIndex = Random.Default.nextInt(colors.size)
+    return colors.removeAt(randomIndex)
+}
+*/
 
 var isLoggedIn = mutableStateOf(false)
 var currUser = mutableStateOf("");
+var currUserPersonalNumber = mutableStateOf(1023) //Temporär als user spabo
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -447,7 +488,8 @@ fun LoginScreen(navController: NavHostController) {
 
 
                 Button(onClick = {
-                    if (!name.isEmpty() && !password.isEmpty()) {
+                    if (!name.isEmpty() && !password.isEmpty() && checkAccessToken()) {
+
                         InitMenues()
                         InitBestellungen(name)
                         Toast.makeText(
@@ -483,10 +525,13 @@ fun LoginScreen(navController: NavHostController) {
 
 
 var bestellungErsteller = mutableStateOf("")
+var bestellungFuer = mutableStateOf("")
 var bestellungDate = mutableStateOf("")
 var bestellungMenue = mutableStateOf("")
 var bestellungComment = mutableStateOf("")
 var bestellungCount = mutableStateOf(1)
+var bestellungMenueId = mutableStateOf(0)
+var bestellungZeitId = mutableStateOf(6) //Temporär
 var isOne = mutableStateOf(true)
 
 @Composable
@@ -544,6 +589,15 @@ fun BestellenScreen(navController: NavHostController) {
             }
         }
         Row() {
+            var orderedFor by remember { mutableStateOf(bestellungFuer.value) }
+
+            TextField(
+                value = orderedFor,
+                onValueChange = { orderedFor = it },
+                label = { Text("Für") }
+            )
+        }
+        Row() {
             var comment by remember { mutableStateOf(bestellungComment.value) }
 
             TextField(
@@ -555,6 +609,8 @@ fun BestellenScreen(navController: NavHostController) {
         Row() {
             Button(
                 onClick = {
+                    navController.navigate("uebersicht")
+                    postBestellung()
                     isLoggedIn.value = true
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green)
@@ -682,6 +738,7 @@ fun InitMenues(): Collection<Menue> {
 
     val request = Request.Builder()
         .url(url)
+        .get()
         .build()
 
     client.newCall(request).enqueue(object : Callback {
@@ -756,11 +813,14 @@ fun <T> SnapshotStateList<T>.swapList(newList: Collection<T>) {
     addAll(newList)
 }
 
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun getMenuesForDate(date: String) {
     var i = LocalDateTime.now().hour
     if (date <= LocalDateTime.now().toString().take(10) && LocalDateTime.now().hour > 9) {
         menueIsInThePast.value = true
+    } else {
+        menueIsInThePast.value = false
     }
     menuesFilteredByDate = menuesFilteredByDate - menuesFilteredByDate
     menues.sortedBy { menue -> menue.date }.sortedBy { menue -> menue.code }.forEach { menu ->
@@ -803,4 +863,91 @@ fun getOeffnungszeiten() {
             }
         }
     })
+}
+
+fun postBestellung() {
+    val url = "http://10.0.2.2:8080/menue/bestellung"
+
+    val bestellung = BestellungDTO(
+        orderedBy = bestellungErsteller.value,
+        amount = bestellungCount.value,
+        comment = bestellungComment.value,
+        menueId = bestellungMenueId.value,
+        orderedFor = bestellungFuer.value,
+        timeId = bestellungZeitId.value, //temporär
+        personalNumber = currUserPersonalNumber.value //temporär
+
+    )
+
+
+    val json = Gson().toJson(bestellung)
+
+    val body = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), json)
+    val request = Request.Builder()
+        .url(url)
+        .post(body)
+        .build()
+
+    client.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            e.printStackTrace()
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+                println("-----------------------------------------------------------------------")
+                println("-----------------------------------------------------------------------")
+                println("-------------------BESTELLT--------------------------")
+                println("-----------------------------------------------------------------------")
+
+
+                val gson = GsonBuilder().create()
+
+                val collectionType: Type =
+                    object : TypeToken<Collection<Bestellung?>?>() {}.type
+                bestellungen = gson.fromJson(response.body!!.string(), collectionType)
+            }
+        }
+    })
+
+}
+
+fun checkAccessToken(): Boolean {
+    var client_secret = "ec78c6bb-8339-4bed-9b1b-e973d27107dc"
+    var tempUsername = "spabo"
+    var tempPassword = "bokica"
+
+    val url = String.format("'http://localhost:8082/auth/realms/menuRealm/protocol/openid-connect/token -H 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'client_id=menu-app' --data-urlencode 'grant_type=password' '--data-urlencode 'client_secret=%s' --data-urlencode 'scope=openid' --data-urlencode 'username=%s' --data-urlencode 'password=%s'", client_secret, tempUsername,tempPassword )
+
+    val request = Request.Builder()
+        .url(url)
+        .build()
+
+    client.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            e.printStackTrace()
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+                println("-----------------------------------------------------------------------")
+                println("-----------------------------------------------------------------------")
+                println("-------------------LOGGED--------------------------")
+                println("-----------------------------------------------------------------------")
+
+
+                val gson = GsonBuilder().create()
+
+                val collectionType: Type =
+                    object : TypeToken<Collection<Bestellung?>?>() {}.type
+                bestellungen = gson.fromJson(response.body!!.string(), collectionType)
+            }
+        }
+    })
+
+    return true
 }
