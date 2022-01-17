@@ -1,7 +1,7 @@
 package com.example.menuebestellung
 
 data class BestellungDTO(
-    var orderer: String,
+    var orderedBy: String,
     var amount: Int,
     var comment: String,
     var menueId: Int,
