@@ -51,9 +51,16 @@ import java.lang.reflect.Type
 import java.util.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import retrofit2.http.FormUrlEncoded
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
+import okhttp3.FormBody
+
+import okhttp3.RequestBody
+
+
+
 
 
 class MainActivity : ComponentActivity() {
@@ -92,11 +99,6 @@ class MainActivity : ComponentActivity() {
                                         name = "Verlauf",
                                         route = "verlauf",
                                         icon = Icons.Default.List
-                                    ),
-                                    BottomNavItem(
-                                        name = "Stats",
-                                        route = "stats",
-                                        icon = Icons.Default.Settings
                                     )
                                 ),
                                 navController = navController,
@@ -129,9 +131,6 @@ fun Navigation(navController: NavHostController) {
         }
         composable("verlauf") {
             VerlaufScreen(navController)
-        }
-        composable("stats") {
-            StatsScreen(navController)
         }
         composable("login") {
             LoginScreen(navController)
@@ -411,50 +410,9 @@ fun OeffnungszeitenItem(oeffnungszeiten: Oeffnungszeiten) {
 
 }
 
-
-@Composable
-fun StatsScreen(navController: NavHostController) {
-    /*PieChart(
-        pieChartData = PieChartData(
-            slices = listOf(
-                PieChartData.Slice(
-                    randomLength(),
-                    randomColor()
-                ),
-                PieChartData.Slice(randomLength(), randomColor()),
-                PieChartData.Slice(randomLength(), randomColor())
-            )
-        ),
-        // Optional properties.
-        modifier = Modifier.fillMaxSize(),
-        animation = simpleChartAnimation(),
-        sliceDrawer = SimpleSliceDrawer()
-    )*/
-}
-/*private val colors = mutableListOf<Color>(
-    Color(0XFFF44336),
-    Color(0XFFE91E63),
-    Color(0XFF9C27B0),
-    Color(0XFF673AB7),
-    Color(0XFF3F51B5),
-    Color(0XFF03A9F4),
-    Color(0XFF009688),
-    Color(0XFFCDDC39),
-    Color(0XFFFFC107),
-    Color(0XFFFF5722),
-    Color(0XFF795548),
-    Color(0XFF9E9E9E),
-    Color(0XFF607D8B)
-)
-private fun randomLength(): Float = Default.nextInt(10, 30).toFloat()
-private fun randomColor(): Color {
-    val randomIndex = Random.Default.nextInt(colors.size)
-    return colors.removeAt(randomIndex)
-}
-*/
-
 var isLoggedIn = mutableStateOf(false)
 var currUser = mutableStateOf("");
+var currUserPassword = mutableStateOf("");
 var currUserPersonalNumber = mutableStateOf(1023) //Temporär als user spabo
 
 @Composable
@@ -480,7 +438,10 @@ fun LoginScreen(navController: NavHostController) {
             Row() {
                 TextField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = {
+                        password = it
+                        currUserPassword.value = password
+                    },
                     visualTransformation = PasswordVisualTransformation()
                 )
             }
@@ -488,7 +449,7 @@ fun LoginScreen(navController: NavHostController) {
 
 
                 Button(onClick = {
-                    if (!name.isEmpty() && !password.isEmpty() && checkAccessToken()) {
+                    if (!name.isEmpty() && !password.isEmpty() &&  checkAccessToken()) {
 
                         InitMenues()
                         InitBestellungen(name)
@@ -817,7 +778,7 @@ fun <T> SnapshotStateList<T>.swapList(newList: Collection<T>) {
 @RequiresApi(Build.VERSION_CODES.O)
 fun getMenuesForDate(date: String) {
     var i = LocalDateTime.now().hour
-    if (date <= LocalDateTime.now().toString().take(10) && LocalDateTime.now().hour > 9) {
+    if (date <= LocalDateTime.now().toString().take(10) && LocalDateTime.now().hour >= 9) {
         menueIsInThePast.value = true
     } else {
         menueIsInThePast.value = false
@@ -882,10 +843,21 @@ fun postBestellung() {
 
     val json = Gson().toJson(bestellung)
 
+
+
     val body = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), json)
+    var formBody = FormBody.Builder()
+        .add("orderedBy", bestellungErsteller.value )
+        .add("amount", bestellungCount.value.toString())
+        .add("comment",bestellungComment.value)
+        .add("menueId", bestellungMenueId.value.toString())
+        .add("orderedFor", bestellungFuer.value)
+        .add("timeId", bestellungZeitId.value.toString())
+        .add("personalNumber",  currUserPersonalNumber.value.toString())
+        .build()
     val request = Request.Builder()
         .url(url)
-        .post(body)
+        .post(formBody)
         .build()
 
     client.newCall(request).enqueue(object : Callback {
@@ -914,15 +886,31 @@ fun postBestellung() {
 
 }
 
+
+var accessToken = mutableStateOf("")
+
+
 fun checkAccessToken(): Boolean {
-    var client_secret = "ec78c6bb-8339-4bed-9b1b-e973d27107dc"
+    var client_secret = "501a7f23-3154-4559-bce2-0dd996767574"
     var tempUsername = "spabo"
     var tempPassword = "bokica"
 
-    val url = String.format("'http://localhost:8082/auth/realms/menuRealm/protocol/openid-connect/token -H 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'client_id=menu-app' --data-urlencode 'grant_type=password' '--data-urlencode 'client_secret=%s' --data-urlencode 'scope=openid' --data-urlencode 'username=%s' --data-urlencode 'password=%s'", client_secret, tempUsername,tempPassword )
+    val url = "http://10.0.2.2:8082/auth/realms/menuRealm/protocol/openid-connect/token"
+
+    var body2 = FormBody.Builder()
+        .add("client_id", "menu-app")
+        .add("grant_type", "password")
+        .add("client_secret", "501a7f23-3154-4559-bce2-0dd996767574")
+        .add("scope", "openid")
+        .add("password", currUserPassword.value)
+        .add("username", currUser.value)
+        .build()
+
+
 
     val request = Request.Builder()
         .url(url)
+        .post(body2)
         .build()
 
     client.newCall(request).enqueue(object : Callback {
@@ -936,18 +924,16 @@ fun checkAccessToken(): Boolean {
 
                 println("-----------------------------------------------------------------------")
                 println("-----------------------------------------------------------------------")
-                println("-------------------LOGGED--------------------------")
+                println("-------------------LOGGED INNNNNNNNNNNNNNNNNN--------------------------")
                 println("-----------------------------------------------------------------------")
-
-
-                val gson = GsonBuilder().create()
-
-                val collectionType: Type =
-                    object : TypeToken<Collection<Bestellung?>?>() {}.type
-                bestellungen = gson.fromJson(response.body!!.string(), collectionType)
+                accessToken.value = response.body!!.string()
+                println(accessToken.value)
             }
         }
     })
 
-    return true
+    if (accessToken.value != ""){
+        return true
+    }
+    return false
 }
