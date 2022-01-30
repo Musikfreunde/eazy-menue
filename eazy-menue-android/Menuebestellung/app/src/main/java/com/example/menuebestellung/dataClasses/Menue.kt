@@ -1,4 +1,4 @@
-package com.example.menuebestellung
+package com.example.menuebestellung.dataClasses
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json

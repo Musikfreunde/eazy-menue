@@ -1,4 +1,4 @@
-package com.example.menuebestellung
+package com.example.menuebestellung.dataClasses
 
 data class AccessToken(val access_token: String,
                        val expires_in: Int,
