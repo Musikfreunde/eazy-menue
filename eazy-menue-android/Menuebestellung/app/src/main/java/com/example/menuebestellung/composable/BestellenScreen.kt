@@ -16,6 +16,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.menuebestellung.oeffnungszeiten
 import com.example.menuebestellung.postBestellung
+import androidx.compose.foundation.layout.Arrangement
+
+
+
 
 
 var bestellungErsteller = mutableStateOf("")
@@ -31,7 +35,11 @@ var isOne = mutableStateOf(true)
 fun BestellenScreen(navController: NavHostController) {
 
 
-    Column() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
         Row() {
             var ersteller by remember { mutableStateOf(bestellungErsteller.value) }
 
@@ -123,13 +131,18 @@ fun BestellenScreen(navController: NavHostController) {
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
-                LazyColumn() {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
                     item {
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .align(Alignment.Center)
                                 .padding(8.dp)
                         ) {
                             Text(

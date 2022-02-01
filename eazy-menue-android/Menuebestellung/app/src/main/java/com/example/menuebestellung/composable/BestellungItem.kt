@@ -33,23 +33,24 @@ fun BestellungItem(bestellung: Bestellung) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+
     ) {
         Text(
             text = bestellung.menueName,
             fontSize = 18.sp,
-            color = Color.Gray,
+            color = Color.Black,
             modifier = Modifier.padding(12.dp)
         )
         Text(
             text = bestellung.createdAt.take(10),
             fontSize = 18.sp,
-            color = Color.Gray,
+            color = Color.Black,
             modifier = Modifier.padding(12.dp)
         )
         Text(
             text = bestellung.menueDate,
             fontSize = 18.sp,
-            color = Color.Gray,
+            color = Color.Black,
             modifier = Modifier.padding(12.dp)
         )
 

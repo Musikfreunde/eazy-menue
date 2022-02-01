@@ -47,13 +47,7 @@ fun LoginScreen(navController: NavHostController) {
                 .fillMaxHeight()
                 .padding(top = 30.dp)
         ) {
-            Row() {
-                /*Image(
-                    painter = painterResource(id = R.drawable.e4b72ecbb7c98f492629cbeee66435e8),
-                    contentDescription = "Account Logo",
-                    Modifier.size(140.dp)
-                )*/
-            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -112,29 +106,36 @@ fun LoginScreen(navController: NavHostController) {
                     Text(text = "Sign In")
                 }
             }
-            Row() {
-                /*Image(
-                    painter = painterResource(R.drawable.android_chrome_512x512),
-                    contentDescription = "Logo",
-                    Modifier.size(140.dp)
-                )*/
-            }
         }
     } else {
-        Button(onClick = {
-            currUser.value = ""
-            menuesFilteredByDate = menuesFilteredByDate - menuesFilteredByDate
-            InitMenues()
-            InitBestellungen("")
-            Toast.makeText(
-                context,
-                "Logged out successfully",
-                Toast.LENGTH_SHORT
-            ).show()
-            isLoggedIn.value = false
-        }) {
-            Text(text = "Sign out")
+        Column() {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .wrapContentSize(
+                        unbounded = false,
+                        align = Alignment.Center
+                    )
+                    .padding(12.dp)
+            ) {
+                Button(onClick = {
+                    currUser.value = ""
+                    menuesFilteredByDate = menuesFilteredByDate - menuesFilteredByDate
+                    InitMenues()
+                    InitBestellungen("")
+                    Toast.makeText(
+                        context,
+                        "Logged out successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    isLoggedIn.value = false
+                }) {
+                    Text(text = "Sign out")
+                }
+            }
         }
+
     }
     getOeffnungszeiten()
 }

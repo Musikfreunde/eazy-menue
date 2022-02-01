@@ -9,41 +9,36 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.R
 import androidx.compose.material.*
-import androidx.compose.material.Button
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.Text
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.*
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.menuebestellung.composable.*
 import com.example.menuebestellung.dataClasses.*
 import com.example.menuebestellung.ui.theme.MenuebestellungTheme
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import okhttp3.*
+import okhttp3.FormBody
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.IOException
 import java.lang.reflect.Type
-import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.time.LocalDateTime
-import okhttp3.FormBody
-
-import okhttp3.RequestBody
 
 
 class MainActivity : ComponentActivity() {
@@ -102,6 +97,7 @@ class MainActivity : ComponentActivity() {
     }
 
 }
+
 
 val client = OkHttpClient()
 var menues: Collection<Menue> = mutableStateListOf<Menue>()
