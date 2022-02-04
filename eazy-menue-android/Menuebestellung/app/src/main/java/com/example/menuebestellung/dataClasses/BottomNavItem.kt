@@ -1,4 +1,4 @@
-package com.example.menuebestellung
+package com.example.menuebestellung.dataClasses
 
 import androidx.compose.ui.graphics.vector.ImageVector
 
