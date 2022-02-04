@@ -36,6 +36,7 @@ import com.google.gson.reflect.TypeToken
 import okhttp3.*
 import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.internal.wait
 import java.io.IOException
 import java.lang.reflect.Type
 import java.time.LocalDateTime
@@ -88,7 +89,10 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) {
-                    Navigation(navController = navController)
+                    innerPadding ->
+                    Box(modifier = Modifier.padding(innerPadding)) {
+                        Navigation(navController = navController)
+                }
                 }
             }
 
@@ -305,7 +309,7 @@ fun checkAccessToken(): Boolean {
     val url = "http://10.0.2.2:8082/auth/realms/menuRealm/protocol/openid-connect/token"
 
     var body2 = FormBody.Builder()
-        .add("client_id", "menu-app")
+        .add("client_id",   "menu-app")
         .add("grant_type", "password")
         .add("client_secret", "501a7f23-3154-4559-bce2-0dd996767574")
         .add("scope", "openid")
@@ -319,11 +323,8 @@ fun checkAccessToken(): Boolean {
         .post(body2)
         .build()
 
-    client.newCall(request).enqueue(object : Callback {
-        override fun onFailure(call: Call, e: IOException) {
-            e.printStackTrace()
-        }
 
+    client.newCall(request).enqueue(object : Callback {
         override fun onResponse(call: Call, response: Response) {
             response.use {
                 if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -333,12 +334,14 @@ fun checkAccessToken(): Boolean {
                 println("-------------------LOGGED INNNNNNNNNNNNNNNNNN--------------------------")
                 println("-----------------------------------------------------------------------")
                 accessToken.value = response.body!!.string()
-                println(accessToken.value)
             }
         }
+        override fun onFailure(call: Call, e: IOException) {
+            e.printStackTrace()
+        }
+
+
     })
-    if (accessToken.value != "") {
-        return true
-    }
-    return false
+    Thread.sleep(100)   //OkHttp doesn't currently offer any asynchronous APIs to receive a response body in parts
+    return accessToken.value != ""
 }

@@ -3,6 +3,7 @@ package com.example.menuebestellung
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavHostController
@@ -14,6 +15,7 @@ import com.example.menuebestellung.composable.UebersichScreen
 import com.example.menuebestellung.composable.VerlaufScreen
 
 
+@ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalFoundationApi

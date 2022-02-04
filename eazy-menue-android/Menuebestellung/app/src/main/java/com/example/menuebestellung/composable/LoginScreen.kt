@@ -121,9 +121,8 @@ fun LoginScreen(navController: NavHostController) {
             ) {
                 Button(onClick = {
                     currUser.value = ""
+                    currUserPassword.value = ""
                     menuesFilteredByDate = menuesFilteredByDate - menuesFilteredByDate
-                    InitMenues()
-                    InitBestellungen("")
                     Toast.makeText(
                         context,
                         "Logged out successfully",
