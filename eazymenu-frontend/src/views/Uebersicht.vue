@@ -146,7 +146,9 @@ export default {
         menuePostA = new MenuViewDto(null, this.currentDate, 'A', this.vorspeise, this.menuA.mainDish, this.dessert, this.menuA.categories)
         menuPostB = new MenuViewDto(null, this.currentDate, 'B', this.vorspeise, this.menuB.mainDish, this.dessert, this.menuB.categories)
         menuPostC = new MenuViewDto(null, this.currentDate, 'C', this.vorspeise, this.menuC.mainDish, this.dessert, this.menuC.categories)
-
+        console.log(menuePostA)
+        console.log(menuPostB)
+        console.log(menuPostC)
         await api.postMenue(menuePostA)
         await api.postMenue(menuPostB)
         await api.postMenue(menuPostC)

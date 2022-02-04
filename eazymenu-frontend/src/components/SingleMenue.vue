@@ -63,6 +63,7 @@ export default {
       return 'https://www.google.com/search?tbm=isch&q=' + menuName
     },
     updateParent () {
+      this.currentMenue.checkedCategories = this.checkedCategories
       this.$emit('update:name', this.currentMenue)
     },
     async getAllCategories () {

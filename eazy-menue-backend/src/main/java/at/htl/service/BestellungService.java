@@ -57,6 +57,20 @@ public class BestellungService {
         return Response.ok(bestellungRepository.addOrder(bestellungDTO)).build();
     }
 
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response stornoOrder(@QueryParam("id") String id){
+        Long convertedId = Long.valueOf(id);
+        boolean isSuccessFull = bestellungRepository.deleteOrderById(convertedId);
+        if (isSuccessFull){
+            return  Response.ok("Order with id " + id + " was cancelled!").build();
+        }
+        else {
+            return Response.status(406, "Order with id " + id + " couldn't be found!").build();
+        }
+    }
+
     @GET
     @Path("/stats/categories/{name}")
     @Produces({MediaType.APPLICATION_JSON})

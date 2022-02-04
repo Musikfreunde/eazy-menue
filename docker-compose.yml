@@ -29,7 +29,7 @@ services:
       - identity-provider
       - backend
     ports:
-      - 8083:8083
+      - 8083:80
     networks:
       - quarkus
 networks:
