@@ -106,7 +106,7 @@ public class Menue {
         return desert;
     }
 
-    public void setDessert(String desert) {
+    public void setDesert(String desert) {
         this.desert = desert;
     }
 
@@ -148,10 +148,6 @@ public class Menue {
 
     public void setKantine(Kantine kantine) {
         this.kantine = kantine;
-    }
-
-    public void setDesert(String desert) {
-        this.desert = desert;
     }
 
     public String getCategories() {

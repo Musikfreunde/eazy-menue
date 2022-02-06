@@ -11,7 +11,6 @@ import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 @Transactional
 @ApplicationScoped
@@ -37,7 +36,7 @@ public class MenueRepository implements PanacheRepository<Menue> {
 
         newMenue.setAppetizer(menueDTO.getAppetizer());
         newMenue.setMainDish(menueDTO.getMainDish());
-        newMenue.setDessert(menueDTO.getDessert());
+        newMenue.setDesert(menueDTO.getDessert());
         newMenue.setDate(LocalDate.parse(menueDTO.getDate().substring(0,10)));
         newMenue.setCode(menueDTO.getCode());
         newMenue.setCategories(menueDTO.getCategories());
@@ -61,7 +60,7 @@ public class MenueRepository implements PanacheRepository<Menue> {
 
         menueFromDb.setAppetizer(menueDTO.getAppetizer());
         menueFromDb.setMainDish(menueDTO.getMainDish());
-        menueFromDb.setDessert(menueDTO.getDessert());
+        menueFromDb.setDesert(menueDTO.getDessert());
         menueFromDb.setCode(menueDTO.getCode());
         menueFromDb.setCategories(menueDTO.getCategories());
 
