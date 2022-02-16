@@ -22,11 +22,11 @@ fun OeffnungszeitenItem(oeffnungszeiten: Oeffnungszeiten) {
 
     val checkedState = remember { mutableStateOf(oeffnungszeiten.chosen) }
     Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(4.dp)
     ) {
         Text(
             text = oeffnungszeiten.time,

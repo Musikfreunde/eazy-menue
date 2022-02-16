@@ -261,14 +261,15 @@ fun postBestellung() {
 
     val body = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), json)
     var formBody = FormBody.Builder()
-        .add("orderedBy", bestellungErsteller.value)
         .add("amount", bestellungCount.value.toString())
         .add("comment", bestellungComment.value)
         .add("menueId", bestellungMenueId.value.toString())
+        .add("orderedBy", bestellungErsteller.value)
         .add("orderedFor", bestellungFuer.value)
-        .add("timeId", bestellungZeitId.value.toString())
         .add("personalNumber", currUserPersonalNumber.value.toString())
+        .add("timeId", bestellungZeitId.value.toString())
         .build()
+
     val request = Request.Builder()
         .url(url)
         .post(body)
@@ -301,6 +302,43 @@ fun postBestellung() {
 }
 
 
+fun deleteBestellung(menuId : Int) {
+    val url = "http://10.0.2.2:8080/menue/bestellung?id=$menuId"
+
+
+
+    val body = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), Gson().toJson(""))
+
+
+    val request = Request.Builder()
+        .url(url)
+        .put(body)
+        .build()
+
+    client.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            e.printStackTrace()
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+                println("-----------------------------------------------------------------------")
+                println("-----------------------------------------------------------------------")
+                println("-------------------BESTELLUNG GELÖSCHT--------------------------")
+                println("-----------------------------------------------------------------------")
+
+                InitBestellungen(currUser.value)
+
+            }
+        }
+    })
+}
+
+
+
+
 var accessToken = mutableStateOf("")
 
 
@@ -324,7 +362,7 @@ fun checkAccessToken(): Boolean {
         .build()
 
 
-    client.newCall(request).enqueue(object : Callback {
+  client.newCall(request).enqueue(object : Callback {
         override fun onResponse(call: Call, response: Response) {
             response.use {
                 if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -342,6 +380,10 @@ fun checkAccessToken(): Boolean {
 
 
     })
-    Thread.sleep(100)   //OkHttp doesn't currently offer any asynchronous APIs to receive a response body in parts
+
+
+
     return accessToken.value != ""
+
+   //return client.newCall(request).execute().body.toString() != ""
 }

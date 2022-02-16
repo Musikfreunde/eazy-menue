@@ -2,12 +2,15 @@ package com.example.menuebestellung.composable
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.R
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -29,7 +32,6 @@ var currUserPersonalNumber = mutableStateOf(1023) //Temporär als user spabo
 @Composable
 fun LoginScreen(navController: NavHostController) {
 
-
     val (focusRequester) = FocusRequester.createRefs()
     val context = LocalContext.current
     var name by remember {
@@ -47,6 +49,7 @@ fun LoginScreen(navController: NavHostController) {
                 .fillMaxHeight()
                 .padding(top = 30.dp)
         ) {
+
 
             Row(
                 modifier = Modifier

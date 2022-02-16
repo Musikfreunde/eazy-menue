@@ -10,7 +10,7 @@ services:
     image: jboss/keycloak:14.0.0
     volumes:
       - ./eazymenu-realm.json:/tmp/eazymenu-realm.json
-      - /keycloak_theme_new:opt/jboss/keycloak/themes/eazymenue
+     # - /keycloak_theme_new:opt/jboss/keycloak/themes/eazymenue
     command: [ '-b', '0.0.0.0', '-Dkeycloak.migration.action=import', '-Dkeycloak.profile.feature.upload_scripts=enabled', '-Dkeycloak.migration.provider=singleFile', '-Dkeycloak.migration.file=/tmp/eazymenu-realm.json' ]
     environment:
       KEYCLOAK_USER: root

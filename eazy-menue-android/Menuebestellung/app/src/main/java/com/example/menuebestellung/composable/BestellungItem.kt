@@ -1,8 +1,10 @@
 package com.example.menuebestellung.composable
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -13,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.menuebestellung.dataClasses.Bestellung
+import com.example.menuebestellung.deleteBestellung
 import com.example.menuebestellung.menues
 
 @Composable
@@ -20,10 +23,12 @@ fun BestellungItem(bestellung: Bestellung) {
 
     var mainDish = ""
     var mainDishDate = ""
+    var mainDishId = 0
     menues.forEach { menue ->
         if (menue.date == bestellung.menueDate) {
             mainDish = menue.mainDish
             mainDishDate = bestellung.createdAt
+            mainDishId = menue.id
         }
     }
 
@@ -65,9 +70,14 @@ fun BestellungItem(bestellung: Bestellung) {
 
         )
         Column() {
-            Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
+            IconButton(onClick = { deleteBestellung(mainDishId)}) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
+            }
+
         }
 
     }
 
 }
+
+

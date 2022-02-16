@@ -1,5 +1,6 @@
 package com.example.menuebestellung.composable
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -132,17 +133,16 @@ fun BestellenScreen(navController: NavHostController) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().padding(top=2.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     item {
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .align(Alignment.Center)
                                 .padding(8.dp)
                         ) {
                             Text(
