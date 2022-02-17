@@ -81,14 +81,20 @@ public class MenueRepository implements PanacheRepository<Menue> {
 
     }
 
-    public Menue getRecommendation(String name, String date){
+    public Menue  getRecommendation(String name, String date){
         List<String> categories = bestellungRepository.getALlCategoriesByUsername(name);
         List<Menue> menues = getMenuesByDate(date);
         Menue recommendedMenue = null;
 
         for (Menue m : menues){
+            if(recommendedMenue != null){
+                break;
+            }
             String[] categorieOfMenue = m.getCategories().split(";");
             for (String category : categories){
+                if(recommendedMenue != null){
+                    break;
+                }
                 for (String c : categorieOfMenue){
                     if (category.equals(c)){
                         recommendedMenue = m ;

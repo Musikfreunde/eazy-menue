@@ -63,12 +63,12 @@ export default {
       return 'https://www.google.com/search?tbm=isch&q=' + menuName
     },
     updateParent () {
-      this.currentMenue.checkedCategories = this.checkedCategories
+      this.currentMenue.checkedCategories = this.checkedCategories.join(';')
+      console.log(this.currentMenue)
       this.$emit('update:name', this.currentMenue)
     },
     async getAllCategories () {
       const response = await api.getAllCategories()
-      console.log(response.data)
       this.categories = response.data
     },
     order () {
@@ -97,9 +97,16 @@ export default {
       } else {
         // eslint-disable-next-line
         let menueForCode = this.$store.getters.getCurrentMenueForCode(this.code)
+        console.log(this.checkedCategories)
+
+        if (this.checkedCategories.length === 0 && menueForCode.categories !== undefined) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.checkedCategories = menueForCode.categories.split(';')
+        }
+
         menueForCode.categories = this.checkedCategories.join(';')
-        console.log(menueForCode)
         this.$emit('update:name', menueForCode)
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         return menueForCode
       }
     }

@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -60,9 +61,7 @@ public class BestellungRepository implements PanacheRepository<Bestellung> {
             Bestellung temp = this.getEntityManager().createNamedQuery("Bestellung.getBestellung", Bestellung.class)
                     .setParameter("id", id).getSingleResult();
             temp.setCanceledAt(new Timestamp(System.currentTimeMillis()));
-            this.getEntityManager().getTransaction().begin();
             this.getEntityManager().merge(temp);
-            this.getEntityManager().getTransaction().commit();
             return true;
         }catch (Exception ex){
             ex.printStackTrace();
@@ -93,7 +92,15 @@ public class BestellungRepository implements PanacheRepository<Bestellung> {
             }
             else{categories.add(c);}
         });
-        return categories;
+
+        //Nimmt alle Kategorien, die der Benutzer bestellt hat und sortiert nach Anzahl
+        Map<String,Long> fr = categories.stream().collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+
+        var temp = fr.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+        return temp.keySet().stream().collect(Collectors.toList());
     }
 
     public List<String> getALlCategories(){
