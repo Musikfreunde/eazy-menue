@@ -18,11 +18,11 @@
         <b-button v-if="$keycloak.hasRealmRole('kantine')" :id="'popover-target'+code" variant="primary" style="margin-top: 5px">
           Kategorien
         </b-button>
-        <b-popover :target="'popover-target'+code" triggers="hover" placement="left">
+        <b-popover :target="'popover-target'+code" triggers="hover" placement="right">
           <template #title>Kategorien</template>
           <!-- eslint-disable -->
           <ul v-for="category in categories">
-            <input :id="category" :value="category" name="product" type="checkbox" v-model="checkedCategories" style="margin-right: 5px"/>
+            <input :id="category" :value="category" name="product" type="checkbox" v-model="checkedCategories" style="margin-right: 5px" :disabled="$keycloak.hasRealmRole('mitarbeiter')" v-on:change="updateParent"/>
             <label :for="category"><strong>{{category}}</strong></label>
           </ul>
           <!-- eslint-enable -->
@@ -34,7 +34,11 @@
                 href="#" variant="primary"
                 v-if="$keycloak.hasRealmRole('mitarbeiter')"
                 :disabled="!showBestellen"
+                style="width: 50%"
                 >Bestellen</b-button>
+      <b-button v-if="$keycloak.hasRealmRole('mitarbeiter')" :id="'popover-target'+code" variant="primary" style="margin-left: 2%">
+        <b-icon icon="question-circle-fill" aria-label="Help"></b-icon>
+      </b-button>
     </b-card>
   </section>
 
@@ -52,7 +56,8 @@ export default {
     return {
       name: '',
       checkedCategories: [],
-      categories: this.getAllCategories()
+      categories: this.getAllCategories(),
+      currentMenueDate: Date
     }
   },
   methods: {
@@ -63,7 +68,7 @@ export default {
       return 'https://www.google.com/search?tbm=isch&q=' + menuName
     },
     updateParent () {
-      this.currentMenue.checkedCategories = this.checkedCategories.join(';')
+      this.currentMenue.categories = this.checkedCategories.join(';')
       console.log(this.currentMenue)
       this.$emit('update:name', this.currentMenue)
     },
@@ -93,13 +98,23 @@ export default {
       if (this.$store.getters.getCurrentMenueForCode(this.code) === undefined) {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.$emit('update:name', { mainDish: '' })
-        return { mainDish: '' }
+        console.log('kein menü für tag')
+        return { mainDish: '', categories: [] }
       } else {
         // eslint-disable-next-line
         let menueForCode = this.$store.getters.getCurrentMenueForCode(this.code)
-        console.log(this.checkedCategories)
 
-        if (this.checkedCategories.length === 0 && menueForCode.categories !== undefined) {
+        if (this.currentMenueDate !== undefined && this.currentMenueDate !== menueForCode.date) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.checkedCategories = []
+        }
+
+        if (menueForCode !== null) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.currentMenueDate = menueForCode.date
+        }
+
+        if (menueForCode !== null && this.checkedCategories.length === 0 && menueForCode.categories !== undefined) {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           this.checkedCategories = menueForCode.categories.split(';')
         }

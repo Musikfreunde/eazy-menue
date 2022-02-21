@@ -1,17 +1,33 @@
 <template>
   <b-tabs id="stat-tabs" >
-    <b-tab title="Kategorien" active><GChart
-      type="PieChart"
-      :data="chartData"
-      :options="chartOptions"
-      :resizeDebounce="10"
-    /></b-tab>
-    <b-tab title="Wochentage" ><GChart
-      type="ColumnChart"
-      :data="chartDataDays"
-      :options="chartOptions"
-      :resizeDebounce="10"
-    /></b-tab>
+    <b-tab title="Kategorien" active>
+      <b-card
+        class="statCard"
+        header="Kategorien aus dem Bestellverlauf"
+        :footer="'Benutzer: ' + $keycloak.idTokenParsed.preferred_username"
+        >
+          <GChart
+            type="PieChart"
+            :data="chartData"
+            :options="chartOptions"
+            :resizeDebounce="10"
+          />
+      </b-card>
+    </b-tab>
+    <b-tab title="Wochentage" >
+      <b-card
+        class="statCard"
+        header="Wochentage aus dem Bestellverlauf"
+        :footer="'Benutzer: ' + $keycloak.idTokenParsed.preferred_username"
+      >
+          <GChart
+          type="ColumnChart"
+          :data="chartDataDays"
+          :options="chartOptions"
+          :resizeDebounce="10"
+          />
+      </b-card>
+    </b-tab>
   </b-tabs>
 
 </template>
@@ -73,4 +89,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.statCard{
+  margin: 2%;
+}
 </style>
