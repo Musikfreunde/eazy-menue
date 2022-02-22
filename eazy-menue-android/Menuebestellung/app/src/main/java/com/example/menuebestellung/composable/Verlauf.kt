@@ -1,6 +1,8 @@
 package com.example.menuebestellung.composable
 
+import android.os.Build
 import android.os.Message
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -27,6 +29,7 @@ import com.example.menuebestellung.bestellungen
 import java.security.MessageDigest
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalMaterialApi
 @Composable
 fun VerlaufScreen(navController: NavHostController) {
