@@ -7,5 +7,5 @@ data class BestellungDTO(
     var menueId: Int,
     var orderedFor: String,
     var timeId: Int,
-    var personalNumber: Int
+    var personalNummer: Int
 )
