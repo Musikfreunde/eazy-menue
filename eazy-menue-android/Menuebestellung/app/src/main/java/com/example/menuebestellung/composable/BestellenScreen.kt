@@ -37,7 +37,7 @@ fun BestellenScreen(navController: NavHostController) {
 
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -47,6 +47,7 @@ fun BestellenScreen(navController: NavHostController) {
             TextField(
                 value = ersteller,
                 onValueChange = { ersteller = it },
+                enabled=false,
                 label = { Text("Ersteller") }
             )
         }
@@ -56,6 +57,7 @@ fun BestellenScreen(navController: NavHostController) {
             TextField(
                 value = date,
                 onValueChange = { date = it },
+                enabled=false,
                 label = { Text("Date") }
             )
         }
@@ -65,6 +67,7 @@ fun BestellenScreen(navController: NavHostController) {
             TextField(
                 value = menue,
                 onValueChange = { menue = it },
+                enabled=false,
                 label = { Text("Menue") }
             )
         }
@@ -79,6 +82,7 @@ fun BestellenScreen(navController: NavHostController) {
             var count by remember { mutableStateOf(bestellungCount.value) }
 
             TextField(
+                enabled=false,
                 value = bestellungCount.value.toString(),
                 onValueChange = { bestellungCount.value = count },
                 modifier = Modifier.width(90.dp)
@@ -130,7 +134,9 @@ fun BestellenScreen(navController: NavHostController) {
         }
         Row() {
             Box(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .border(2.dp, Color.Black)
+
             ) {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(top=2.dp),
