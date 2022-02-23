@@ -3,73 +3,48 @@
     <#if section = "title">
         ${msg("loginTitle",(realm.displayName!''))}
     <#elseif section = "header">
-        ${msg("loginTitleHtml",(realm.displayNameHtml!''))}
+        <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet"/>
+        <link href="${url.resourcesPath}/img/favicon.ico" rel="icon"/>
+        <script>
+            function togglePassword() {
+                var x = document.getElementById("password");
+                var v = document.getElementById("vi");
+                if (x.type === "password") {
+                    x.type = "text";
+                    v.src = "${url.resourcesPath}/img/eye.png";
+                } else {
+                    x.type = "password";
+                    v.src = "${url.resourcesPath}/img/eye-off.png";
+                }
+            }
+        </script>
     <#elseif section = "form">
-        <#include "logo.ftl">
-
+        <div>
+            <img class="logo" src="${url.resourcesPath}/img/logo.png" alt="Alfresco" style="width: 150px;height:150px">
+        </div>
+        <div class="box-container">
         <#if realm.password>
-            <form id="kc-form-login" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
-                <div class="${properties.kcFormGroupClass!}">
-                    <div class="kc-form-title">${msg("passwordLogin")}</div>
-                    <div class="${properties.kcInputWrapperClass!}">
-                        <#if usernameEditDisabled??>
-                            <input id="username" class="${properties.kcInputClass!}" name="username" value="${(login.username!'')}" type="text" disabled />
-                        <#else>
-                            <input id="username" class="${properties.kcInputClass!}" name="username" value="${(login.username!'')}" type="text" autofocus autocomplete="off" placeholder="<#if !realm.loginWithEmailAllowed>${msg("username")}<#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmail")}<#else>${msg("email")}</#if>" />
-                        </#if>
+            <div>
+               <form id="kc-form-login" class="form" onsubmit="return true;" action="${url.loginAction}" method="post">
+                    <input id="username" class="login-field" placeholder="${msg("Benutzername")}" type="text" name="username" tabindex="1">
+                    <div>
+                        <label class="visibility" id="v" onclick="togglePassword()"><img id="vi" src="${url.resourcesPath}/img/eye-off.png"></label>
                     </div>
-                </div>
-
-                <div class="${properties.kcFormGroupClass!}">
-                    <div class="${properties.kcInputWrapperClass!}">
-                        <input id="password" class="${properties.kcInputClass!}" name="password" type="password" autocomplete="off" placeholder="Password" />
-                    </div>
-                </div>
-
-                <div class="${properties.kcFormGroupClass!}">
-                    <div id="kc-form-options" class="${properties.kcFormOptionsClass!}">
-                        <#if realm.rememberMe && !usernameEditDisabled??>
-                            <div class="checkbox">
-                                <label>
-                                    <#if login.rememberMe??>
-                                        <input id="rememberMe" name="rememberMe" type="checkbox" tabindex="3" checked> ${msg("rememberMe")}
-                                    <#else>
-                                        <input id="rememberMe" name="rememberMe" type="checkbox" tabindex="3"> ${msg("rememberMe")}
-                                    </#if>
-                                </label>
-                            </div>
-                        </#if>
-                        <div class="${properties.kcFormOptionsWrapperClass!}">
-                            <#if realm.resetPasswordAllowed>
-                                <span><a href="${url.loginResetCredentialsUrl}">${msg("doForgotPassword")}</a></span>
-                            </#if>
-                        </div>
-                    </div>
-
-                    <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
-                        <div class="${properties.kcFormButtonsWrapperClass!}">
-                            <input class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonLargeClass!}" name="login" id="kc-login" type="submit" value="${msg("doLogIn")}"/>
-                        </div>
-                     </div>
-                </div>
-            </form>
-        </#if>
-    <#elseif section = "info" >
-        <#if realm.password && social.providers??>
-            <div class="kc-form-title">${msg("oauthLogin")}</div>
-            <div id="kc-social-providers">
-                <ul>
-                    <#list social.providers as p>
-                        <li><a href="${p.loginUrl}" id="zocial-${p.alias}" class="zocial ${p.providerId}"> <span class="text">${p.displayName}</span></a></li>
-                    </#list>
-                </ul>
+                <input id="password" class="login-field" placeholder="${msg("Passwort")}" type="password" name="password" tabindex="2">
+                <input class="submit" type="submit" value="${msg("doLogIn")}" tabindex="3">
+                </form>
             </div>
         </#if>
-
-        <#if realm.password && realm.registrationAllowed && !usernameEditDisabled??>
-            <div id="kc-registration">
-                <span>${msg("noAccount")} <a href="${url.registrationUrl}">${msg("doRegister")}</a></span>
+        <#if social.providers??>
+            <p class="para">${msg("selectAlternative")}</p>
+            <div id="social-providers">
+                <#list social.providers as p>
+                <input class="social-link-style" type="button" onclick="location.href='${p.loginUrl}';" value="${msg("Log in")}"/>
+                </#list>
             </div>
         </#if>
+        <div>
+            <p class="copyright">&copy; ${msg("copyright", "${.now?string('yyyy')}")}</p>
+        </div>
     </#if>
 </@layout.registrationLayout>
