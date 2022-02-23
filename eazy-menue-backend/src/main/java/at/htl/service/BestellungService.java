@@ -28,7 +28,6 @@ public class BestellungService {
         return Response.ok(bestellungRepository.getDaysOfWeekByUser(name)).build();
     }
 
-
     @GET
     @Path("/categories/{name}")
     @Produces({MediaType.APPLICATION_JSON})
