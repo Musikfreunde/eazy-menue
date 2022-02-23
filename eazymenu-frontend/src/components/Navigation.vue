@@ -10,7 +10,7 @@
       <template #footer="{ hide }">
         <div class="d-flex bg-dark text-light align-items-center px-3 py-2">
           <strong class="mr-auto">{{$keycloak.idTokenParsed.preferred_username}}</strong>
-          <b-button class="logout"   size="sm" @click="hide,$keycloak.logout()">Ausloggen</b-button>
+          <b-button class="logout"   size="sm" @click="hide,$keycloak.logout(),$router.push('/')">Ausloggen</b-button>
         </div>
       </template>
       <nav class="mb-3">
