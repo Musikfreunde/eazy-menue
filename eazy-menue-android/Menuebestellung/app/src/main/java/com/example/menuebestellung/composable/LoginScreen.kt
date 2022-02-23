@@ -2,26 +2,27 @@ package com.example.menuebestellung.composable
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.menuebestellung.*
+import com.example.menuebestellung.R
+import com.example.menuebestellung.R.drawable
+
 
 var isLoggedIn = mutableStateOf(false)
 var currUser = mutableStateOf("");
@@ -50,7 +51,15 @@ fun LoginScreen(navController: NavHostController) {
                 .padding(top = 30.dp)
         ) {
 
+            /*Row(){
+                Image(
+                    painterResource(R.drawable.logo_eazy_menue),
+                    contentDescription = "",
+                    contentScale = ContentScale.Inside,
+                    modifier = Modifier.padding(end = 10.dp)
+                )
 
+            }*/
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -78,7 +87,11 @@ fun LoginScreen(navController: NavHostController) {
                         currUserPassword.value = password
                     },
                     visualTransformation = PasswordVisualTransformation(),
-                    label = { Text(text = "Password") }
+                    label = { Text(text = "Password") },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password,
+                        autoCorrect = false
+                    )
                 )
             }
 

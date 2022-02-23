@@ -104,6 +104,15 @@ var menuesFilteredByDate: Collection<Menue> = mutableStateListOf<Menue>()
 var bestellungen: Collection<Bestellung> = mutableStateListOf<Bestellung>()
 var oeffnungszeiten: Collection<Oeffnungszeiten> = mutableStateListOf<Oeffnungszeiten>()
 
+
+
+@JvmName("getBestellungen1")
+fun getBestellungen(): Collection<Bestellung> {
+        return bestellungen;
+}
+
+
+
 fun InitMenues(): Collection<Menue> {
 
     val url = "http://10.0.2.2:8080/menue/menues"
@@ -310,6 +319,7 @@ fun deleteBestellung(menuId : Int) {
                 println("-------------------BESTELLUNG GELÖSCHT--------------------------")
                 println("-----------------------------------------------------------------------")
 
+
                 InitBestellungen(currUser.value)
 
             }
@@ -367,8 +377,6 @@ fun checkAccessToken(): Boolean {
             countDownLatch.countDown()
 
         }
-
-
     })
     countDownLatch.await()
     return accessToken.value != ""
