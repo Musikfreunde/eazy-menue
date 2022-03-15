@@ -77,11 +77,6 @@ fun BestellungItem(bestellung: Bestellung) {
 
 
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
                         AnimatedVisibility(
                             visible = !deletedItem.contains(bestellung),
                             enter = expandVertically(),
@@ -140,7 +135,6 @@ fun BestellungItem(bestellung: Bestellung) {
 
                         }
 
-            }
         }
     }
 }

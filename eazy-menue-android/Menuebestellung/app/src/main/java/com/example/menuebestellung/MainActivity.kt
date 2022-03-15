@@ -2,6 +2,7 @@ package com.example.menuebestellung
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -19,8 +20,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
+import androidx.core.net.MailTo.parse
 import androidx.navigation.compose.rememberNavController
+import com.example.menuebestellung.api.APIService
 import com.example.menuebestellung.composable.*
 import com.example.menuebestellung.dataClasses.Bestellung
 import com.example.menuebestellung.dataClasses.BottomNavItem
@@ -29,16 +31,26 @@ import com.example.menuebestellung.dataClasses.Oeffnungszeiten
 import com.example.menuebestellung.ui.theme.MenuebestellungTheme
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.*
+import okhttp3.MediaType.Companion.parse
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import retrofit2.Retrofit
 import java.io.IOException
 import java.lang.reflect.Type
+import java.net.HttpCookie.parse
+import java.net.URL
 import java.time.LocalDateTime
 import java.util.concurrent.CountDownLatch
+import java.util.logging.Level.parse
 
 
 class MainActivity : ComponentActivity() {
@@ -251,7 +263,7 @@ fun getOeffnungszeiten() {
 }
 
 fun postBestellung() {
-    val url = "http://10.0.2.2:8080/menue/bestellung"
+    val url = URL("http://10.0.2.2:8080/menue/bestellung/")
 
     var formBody : RequestBody = FormBody.Builder()
         .add("amount", bestellungCount.value.toString())
@@ -284,9 +296,10 @@ fun postBestellung() {
     val request = Request.Builder()
         .url(url)
         .post(formBody)
+        .header("Content-Type", "application/json")
         .build()
 
-    client.newCall(requestDto).enqueue(object : Callback {
+    client.newCall(request).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
             e.printStackTrace()
         }
@@ -309,6 +322,7 @@ fun postBestellung() {
             }
         }
     })
+
 
 }
 
