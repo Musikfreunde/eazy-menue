@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.menuebestellung.composable.*
 import com.example.menuebestellung.dataClasses.Bestellung
@@ -30,7 +31,10 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.IOException
 import java.lang.reflect.Type
 import java.time.LocalDateTime
@@ -56,7 +60,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     bottomBar = {
 
-                        if (isLoggedIn.value) {
+                        if (isLoggedIn.value && !onBestellScreen.value) {
                             BottomNavigationBar(
                                 items = listOf(
 
@@ -101,7 +105,7 @@ class MainActivity : ComponentActivity() {
 val client = OkHttpClient()
 var menues: Collection<Menue> = mutableStateListOf<Menue>()
 var menuesFilteredByDate: Collection<Menue> = mutableStateListOf<Menue>()
-var bestellungen: Collection<Bestellung> = mutableStateListOf<Bestellung>()
+var bestellungen: List<Bestellung> = mutableStateListOf<Bestellung>()
 var oeffnungszeiten: Collection<Oeffnungszeiten> = mutableStateListOf<Oeffnungszeiten>()
 
 
@@ -259,13 +263,30 @@ fun postBestellung() {
         .add("timeId", bestellungZeitId.value.toString())
         .build()
 
+    val dto = JSONObject()
+    dto.put("amount", bestellungCount.value.toString())
+    dto.put("comment", bestellungComment.value)
+    dto.put("menueId", bestellungMenueId.value.toString())
+    dto.put("orderedBy", bestellungErsteller.value)
+    dto.put("orderedFor", bestellungFuer.value)
+    dto.put("personalNumber", currUserPersonalNumber.value.toString())
+    dto.put("timeId", bestellungZeitId.value.toString())
 
+    val mediaType = "application/json; charset=utf-8".toMediaType()
+    val requestBody = dto.toString().toRequestBody(mediaType)
+
+    val requestDto = Request.Builder()
+        .url(url)
+        .post(requestBody)
+        .build()
+
+    println(requestDto)
     val request = Request.Builder()
         .url(url)
         .post(formBody)
         .build()
 
-    client.newCall(request).enqueue(object : Callback {
+    client.newCall(requestDto).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
             e.printStackTrace()
         }
@@ -305,6 +326,7 @@ fun deleteBestellung(menuId : Int) {
         .put(body)
         .build()
 
+
     client.newCall(request).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
             e.printStackTrace()
@@ -312,7 +334,9 @@ fun deleteBestellung(menuId : Int) {
 
         override fun onResponse(call: Call, response: Response) {
             response.use {
-                if (!response.isSuccessful) throw IOException("Unexpected code $response")
+                if (!response.isSuccessful){
+                    throw IOException("Unexpected code $response")
+                }
 
                 println("-----------------------------------------------------------------------")
                 println("-----------------------------------------------------------------------")
@@ -321,10 +345,10 @@ fun deleteBestellung(menuId : Int) {
 
 
                 InitBestellungen(currUser.value)
-
             }
         }
     })
+
 }
 
 

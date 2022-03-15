@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,7 +42,7 @@ fun LoginScreen(navController: NavHostController) {
     var password by remember {
         mutableStateOf("")
     }
-    if (!isLoggedIn.value) {
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -51,7 +52,7 @@ fun LoginScreen(navController: NavHostController) {
                 .padding(top = 30.dp)
         ) {
 
-            /*Row(){
+            Row(){
                 Image(
                     painterResource(R.drawable.logo_eazy_menue),
                     contentDescription = "",
@@ -59,7 +60,8 @@ fun LoginScreen(navController: NavHostController) {
                     modifier = Modifier.padding(end = 10.dp)
                 )
 
-            }*/
+            }
+            if (!isLoggedIn.value) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -117,40 +119,36 @@ fun LoginScreen(navController: NavHostController) {
                             Toast.LENGTH_SHORT
                         ).show()
                         isLoggedIn.value = true
+                        navController.navigate("uebersicht")
+
                     }
                 }) {
                     Text(text = "Sign In")
                 }
             }
         }
-    } else {
-        Column() {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .wrapContentSize(
-                        unbounded = false,
-                        align = Alignment.Center
-                    )
-                    .padding(12.dp)
-            ) {
-                Button(onClick = {
-                    currUser.value = ""
-                    currUserPassword.value = ""
-                    menuesFilteredByDate = menuesFilteredByDate - menuesFilteredByDate
-                    Toast.makeText(
-                        context,
-                        "Logged out successfully",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    isLoggedIn.value = false
-                }) {
-                    Text(text = "Sign out")
+     else {
+                Column() {
+                    Row(
+
+                    ) {
+
+                        Button(onClick = {
+                            currUser.value = ""
+                            currUserPassword.value = ""
+                            menuesFilteredByDate = menuesFilteredByDate - menuesFilteredByDate
+                            Toast.makeText(
+                                context,
+                                "Logged out successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            isLoggedIn.value = false
+                        }) {
+                            Text(text = "Sign out")
+                        }
+                    }
                 }
             }
-        }
-
     }
     getOeffnungszeiten()
 }

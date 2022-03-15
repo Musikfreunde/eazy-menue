@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -25,51 +26,21 @@ import com.example.menuebestellung.getBestellungen
 @Composable
 fun VerlaufScreen(navController: NavHostController) {
 
+
+    onBestellScreen.value = false
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        LazyColumn() {
-            item {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .background(color = Color.Black)
-                ) {
-                    Column() {
-                        Text(
-                            text = "Menu",
-                            fontSize = 25.sp,
-                            color = Color.White,
-                            modifier = Modifier.padding(12.dp)
 
-                        )
-                    }
-                    Column() {
-                        Text(
-                            text = "Ordered Date",
-                            fontSize = 25.sp,
-                            color = Color.White,
-                            modifier = Modifier.padding(12.dp)
-                        )
-                    }
-                    Column() {
-                        Text(
-                            text = "Menue Date",
-                            fontSize = 25.sp,
-                            color = Color.White,
-                            modifier = Modifier.padding(12.dp)
-                        )
-                    }
-
-                }
-
-            }
+        LazyColumn(
+            horizontalAlignment = Alignment.Start
+        ) {
             items(bestellungen.toMutableStateList()) { bestellung ->
+
                 BestellungItem(bestellung = bestellung)
             }
+
         }
     }
 }
