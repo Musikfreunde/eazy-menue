@@ -12,7 +12,7 @@ import java.util.Objects;
         @NamedQuery(name = "Bestellung.getBestellung",
                 query = "select b from Bestellung b where b.id = :id"),
         @NamedQuery(name = "Bestellung.getOrdersByDate",
-                query = "select b.menue.code ,CONCAT(CONCAT(b.oeffnungszeit.timeWindowFrom ,' - '), b.oeffnungszeit.timeWindowTo) as timewindow, b.orderedFor, b.menue.mainDish, b.menue.date, b.personalNumber, b.menueCounter from Bestellung b where b.menue.date = :date and b.canceledAt is null order by b.menue.code, b.orderedFor "),
+                query = "select b.menue.code ,CONCAT(CONCAT(b.oeffnungszeit.timeWindowFrom ,' - '), b.oeffnungszeit.timeWindowTo) as timewindow, b.orderedFor, b.menue.mainDish, b.menue.date, b.personalNumber, b.menueCounter, b.comment from Bestellung b where b.menue.date = :date and b.canceledAt is null order by b.menue.code, b.orderedFor "),
         @NamedQuery(name = "Bestellung.getALlCategoriesByUsername",
                 query = "select b.menue.categories from Bestellung b where b.orderedFor = :name and b.canceledAt is null"),
         @NamedQuery(name = "Bestellung.getALlCategories",

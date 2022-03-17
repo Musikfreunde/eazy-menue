@@ -46,6 +46,9 @@
         <template #head(menueCounter)="">
           <span>Anzahl</span>
         </template>
+        <template #head(comment)="">
+          <span>Kommentar</span>
+        </template>
         <template #cell(date)="data">
         <span>{{
             new Date(data.item.date).toLocaleDateString('de-DE', {

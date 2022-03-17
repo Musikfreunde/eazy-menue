@@ -76,7 +76,7 @@ public class BestellungRepository implements PanacheRepository<Bestellung> {
         return (List) query.getResultList().stream().map(m -> {
             Object[] temp = (Object[]) m;
             return new BestellungKantineDTO((char) temp[0], (String) temp[1], (String) temp[2],
-                    (String) temp[3],((LocalDate) temp[4]).toString(), (Long) temp[5],(Integer) temp[6]);
+                    (String) temp[3],((LocalDate) temp[4]).toString(), (Long) temp[5],(Integer) temp[6], (String) temp[7]);
         }).collect(Collectors.toList());
 
     }

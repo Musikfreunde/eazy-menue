@@ -8,8 +8,9 @@ public class BestellungKantineDTO {
     private String timewindow;
     private Long personalNumber;
     private int menueCounter;
+    private String comment;
 
-    public BestellungKantineDTO(char code, String timewindow, String orderedFor, String menue, String date, Long personalNumber, int menueCounter ) {
+    public BestellungKantineDTO(char code, String timewindow, String orderedFor, String menue, String date, Long personalNumber, int menueCounter, String comment ) {
         this.code = code;
         this.orderedFor = orderedFor;
         this.menue = menue;
@@ -17,6 +18,15 @@ public class BestellungKantineDTO {
         this.timewindow = timewindow;
         this.personalNumber = personalNumber;
         this.menueCounter = menueCounter;
+        this.comment = comment == null ? "" : comment;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public int getMenueCounter() {
