@@ -99,11 +99,10 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     }
-                ) {
-                    innerPadding ->
+                ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         Navigation(navController = navController)
-                }
+                    }
                 }
             }
 
@@ -119,14 +118,6 @@ var menues: Collection<Menue> = mutableStateListOf<Menue>()
 var menuesFilteredByDate: Collection<Menue> = mutableStateListOf<Menue>()
 var bestellungen: List<Bestellung> = mutableStateListOf<Bestellung>()
 var oeffnungszeiten: Collection<Oeffnungszeiten> = mutableStateListOf<Oeffnungszeiten>()
-
-
-
-@JvmName("getBestellungen1")
-fun getBestellungen(): Collection<Bestellung> {
-        return bestellungen;
-}
-
 
 
 fun InitMenues(): Collection<Menue> {
@@ -157,6 +148,8 @@ fun InitMenues(): Collection<Menue> {
 
                 val collectionType: Type =
                     object : TypeToken<Collection<Menue?>?>() {}.type
+
+
                 menues = gson.fromJson(response.body!!.string(), collectionType)
             }
         }
@@ -200,6 +193,7 @@ fun InitBestellungen(currUser: String): Collection<Bestellung> {
             }
         })
 
+        InitBestellungen(bestellungErsteller.value)
     }
 
     return listOf<Bestellung>()
@@ -265,26 +259,16 @@ fun getOeffnungszeiten() {
 fun postBestellung() {
     val url = URL("http://10.0.2.2:8080/menue/bestellung/")
 
-    var formBody : RequestBody = FormBody.Builder()
-        .add("amount", bestellungCount.value.toString())
-        .add("comment", bestellungComment.value)
-        .add("menueId", bestellungMenueId.value.toString())
-        .add("orderedBy", bestellungErsteller.value)
-        .add("orderedFor", bestellungFuer.value)
-        .add("personalNumber", currUserPersonalNumber.value.toString())
-        .add("timeId", bestellungZeitId.value.toString())
-        .build()
-
     val dto = JSONObject()
     dto.put("amount", bestellungCount.value.toString())
     dto.put("comment", bestellungComment.value)
     dto.put("menueId", bestellungMenueId.value.toString())
     dto.put("orderedBy", bestellungErsteller.value)
     dto.put("orderedFor", bestellungFuer.value)
-    dto.put("personalNumber", currUserPersonalNumber.value.toString())
+    dto.put("personalNummer", currUserPersonalNumber.value.toString())
     dto.put("timeId", bestellungZeitId.value.toString())
 
-    val mediaType = "application/json; charset=utf-8".toMediaType()
+    val mediaType = String.format("application/json; charset=utf-8").toMediaType()
     val requestBody = dto.toString().toRequestBody(mediaType)
 
     val requestDto = Request.Builder()
@@ -293,13 +277,9 @@ fun postBestellung() {
         .build()
 
     println(requestDto)
-    val request = Request.Builder()
-        .url(url)
-        .post(formBody)
-        .header("Content-Type", "application/json")
-        .build()
 
-    client.newCall(request).enqueue(object : Callback {
+
+    client.newCall(requestDto).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
             e.printStackTrace()
         }
@@ -308,38 +288,29 @@ fun postBestellung() {
             response.use {
                 if (!response.isSuccessful) throw IOException("Unexpected code $response")
 
-                println("-----------------------------------------------------------------------")
-                println("-----------------------------------------------------------------------")
-                println("-------------------BESTELLT--------------------------")
-                println("-----------------------------------------------------------------------")
-
-
-                val gson = GsonBuilder().create()
+                /*val gson = GsonBuilder().create()
 
                 val collectionType: Type =
-                    object : TypeToken<Collection<Bestellung?>?>() {}.type
-                bestellungen = gson.fromJson(response.body!!.string(), collectionType)
+                    object : TypeToken<List<Bestellung?>?>() {}.type
+
+                bestellungen = gson.fromJson(response.body!!.string(), collectionType)*/
+
+                response.headers.get("orderedBy")?.let { it1 -> InitBestellungen(it1) }
             }
         }
     })
 
-
 }
 
 
-fun deleteBestellung(menuId : Int) {
+fun deleteBestellung(menuId: Int) {
     val url = "http://10.0.2.2:8080/menue/bestellung?id=$menuId"
-
-
-
-    val body = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), Gson().toJson(""))
-
-
+    val body =
+        RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), Gson().toJson(""))
     val request = Request.Builder()
         .url(url)
         .put(body)
         .build()
-
 
     client.newCall(request).enqueue(object : Callback {
         override fun onFailure(call: Call, e: IOException) {
@@ -348,15 +319,9 @@ fun deleteBestellung(menuId : Int) {
 
         override fun onResponse(call: Call, response: Response) {
             response.use {
-                if (!response.isSuccessful){
+                if (!response.isSuccessful) {
                     throw IOException("Unexpected code $response")
                 }
-
-                println("-----------------------------------------------------------------------")
-                println("-----------------------------------------------------------------------")
-                println("-------------------BESTELLUNG GELÖSCHT--------------------------")
-                println("-----------------------------------------------------------------------")
-
 
                 InitBestellungen(currUser.value)
             }
@@ -364,8 +329,6 @@ fun deleteBestellung(menuId : Int) {
     })
 
 }
-
-
 
 
 var accessToken = mutableStateOf("")
@@ -376,40 +339,30 @@ fun checkAccessToken(): Boolean {
     val url = "http://10.0.2.2:8082/auth/realms/menuRealm/protocol/openid-connect/token"
 
     var body2 = FormBody.Builder()
-        .add("client_id",   "menu-app")
+        .add("client_id", "menu-app")
         .add("grant_type", "password")
         .add("client_secret", "501a7f23-3154-4559-bce2-0dd996767574")
         .add("scope", "openid")
         .add("password", currUserPassword.value)
         .add("username", currUser.value)
         .build()
-
-
     val request = Request.Builder()
         .url(url)
         .post(body2)
         .build()
-
     val countDownLatch = CountDownLatch(1)
-
-  client.newCall(request).enqueue(object : Callback {
+    client.newCall(request).enqueue(object : Callback {
         override fun onResponse(call: Call, response: Response) {
             response.use {
                 if (response.isSuccessful) {
-
-
-                    println("-----------------------------------------------------------------------")
-                    println("-----------------------------------------------------------------------")
-                    println("-------------------LOGGED INNNNNNNNNNNNNNNNNN--------------------------")
-                    println("-----------------------------------------------------------------------")
                     accessToken.value = response.body!!.string()
-                }
-                else{
+                } else {
                     throw IOException("Unexpected code $response")
                 }
             }
             countDownLatch.countDown()
         }
+
         override fun onFailure(call: Call, e: IOException) {
             e.printStackTrace()
             countDownLatch.countDown()
@@ -419,5 +372,5 @@ fun checkAccessToken(): Boolean {
     countDownLatch.await()
     return accessToken.value != ""
 
-   //return client.newCall(request).execute().body.toString() != ""
+    //return client.newCall(request).execute().body.toString() != ""
 }

@@ -33,6 +33,11 @@ fun CardDemo(menue: Menue, navController: NavHostController) {
                 Button(enabled = !menueIsInThePast.value,
                     onClick = {
                         if (isLoggedIn.value) {
+                            bestellungMenueId.value = menue.id
+                            bestellungMenue.value = menue.mainDish
+                            bestellungDate.value = menue.date
+                            bestellungErsteller.value = currUser.value
+                            bestellungFuer.value = currUser.value
                             navController.navigate("bestellen")
                         }
                     }) {
@@ -47,10 +52,7 @@ fun CardDemo(menue: Menue, navController: NavHostController) {
 
 
 
-    bestellungMenueId.value = menue.id
-    bestellungMenue.value = menue.mainDish
-    bestellungDate.value = menue.date
-    bestellungErsteller.value = currUser.value
+
 }
 
 @Composable

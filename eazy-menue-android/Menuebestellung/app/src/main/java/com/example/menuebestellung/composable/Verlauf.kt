@@ -16,9 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.menuebestellung.InitBestellungen
 import com.example.menuebestellung.bestellungen
 import com.example.menuebestellung.dataClasses.Bestellung
-import com.example.menuebestellung.getBestellungen
 
 
 @RequiresApi(Build.VERSION_CODES.O)

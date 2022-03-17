@@ -41,6 +41,7 @@ var bestellungZeitId = mutableStateOf(6) //Temporär
 var isOne = mutableStateOf(true)
 var onBestellScreen = mutableStateOf(false)
 
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BestellenScreen(navController: NavHostController) {
@@ -195,6 +196,7 @@ fun BestellenScreen(navController: NavHostController) {
          }
      }*/
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -326,10 +328,10 @@ fun BestellenScreen(navController: NavHostController) {
             ) {
 
                 var orderedFor by remember { mutableStateOf(bestellungFuer.value) }
-
                 TextField(
                     value = orderedFor,
-                    onValueChange = { orderedFor = it },
+                    onValueChange = { orderedFor = it
+                                    bestellungFuer.value = orderedFor},
                     label = { Text("Für") },
                     shape = RoundedCornerShape(8.dp)
                 )
@@ -345,7 +347,8 @@ fun BestellenScreen(navController: NavHostController) {
 
                 TextField(
                     value = comment,
-                    onValueChange = { comment = it },
+                    onValueChange = { comment = it
+                                    bestellungComment.value = comment},
                     label = { Text("Kommentar") },
                     shape = RoundedCornerShape(8.dp)
                 )
