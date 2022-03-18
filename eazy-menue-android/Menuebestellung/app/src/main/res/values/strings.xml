@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Menuebestellung</string>
+    <string name="api_bestellung">http://10.0.2.2:8080/menue/bestellung/</string>
+    <string name="api_öffnungszeiten">http://10.0.2.2:8080/menue/oeffnungszeiten</string>
+    <string name="api_deleteBestellung">http://10.0.2.2:8080/menue/bestellung?id=</string>
+    <string name="api_keycloak">http://10.0.2.2:8082/auth/realms/menuRealm/protocol/openid-connect/token</string>
 </resources>

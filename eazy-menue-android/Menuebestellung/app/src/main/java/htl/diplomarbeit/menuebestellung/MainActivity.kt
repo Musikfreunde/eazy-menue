@@ -1,6 +1,5 @@
 package htl.diplomarbeit.menuebestellung
 
-import htl.diplomarbeit.menuebestellung.*
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -210,6 +209,7 @@ fun getMenuesForDate(date: String) {
 
 fun getOeffnungszeiten() {
     val url = "http://10.0.2.2:8080/menue/oeffnungszeiten"
+
 
     val request = Request.Builder()
         .url(url)

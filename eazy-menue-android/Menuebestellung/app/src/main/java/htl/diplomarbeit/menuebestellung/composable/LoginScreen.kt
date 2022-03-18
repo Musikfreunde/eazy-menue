@@ -1,6 +1,7 @@
 package htl.diplomarbeit.menuebestellung.composable
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
@@ -11,12 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import htl.diplomarbeit.menuebestellung.*
+import htl.diplomarbeit.menuebestellung.R
 
 var isLoggedIn = mutableStateOf(false)
 var currUser = mutableStateOf("");
@@ -46,12 +50,12 @@ fun LoginScreen(navController: NavHostController) {
         ) {
 
             Row(){
-                /*Image(
+                Image(
                     painterResource(R.drawable.logo_eazy_menue),
                     contentDescription = "",
                     contentScale = ContentScale.Inside,
                     modifier = Modifier.padding(end = 10.dp)
-                )*/
+                )
 
             }
             if (!isLoggedIn.value) {
