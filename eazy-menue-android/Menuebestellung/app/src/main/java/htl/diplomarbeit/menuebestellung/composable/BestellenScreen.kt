@@ -5,20 +5,19 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import htl.diplomarbeit.menuebestellung.oeffnungszeiten
-import htl.diplomarbeit.menuebestellung.postBestellung
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import htl.diplomarbeit.menuebestellung.api.oeffnungszeiten
+import htl.diplomarbeit.menuebestellung.api.postBestellung
 
 
 var bestellungErsteller = mutableStateOf("")
@@ -37,156 +36,6 @@ var onBestellScreen = mutableStateOf(false)
 @Composable
 fun BestellenScreen(navController: NavHostController) {
     onBestellScreen.value = true
-
-    /* Column(
-         modifier = Modifier.fillMaxSize(),
-         horizontalAlignment = Alignment.CenterHorizontally,
-         verticalArrangement = Arrangement.Center
-     ) {
-         Row() {
-             var ersteller by remember { mutableStateOf(bestellungErsteller.value) }
-
-             TextField(
-                 value = ersteller,
-                 onValueChange = { ersteller = it },
-                 enabled = false,
-                 label = { Text("Ersteller") }
-             )
-         }
-         Row() {
-             var date by remember { mutableStateOf(bestellungDate.value) }
-
-             TextField(
-                 value = date,
-                 onValueChange = { date = it },
-                 enabled = false,
-                 label = { Text("Date") }
-             )
-         }
-         Row() {
-             var menue by remember { mutableStateOf(bestellungMenue.value) }
-
-             TextField(
-                 value = menue,
-                 onValueChange = { menue = it },
-                 enabled = false,
-                 label = { Text("Menue") }
-             )
-         }
-         Row() {
-             Button(
-                 enabled = !isOne.value,
-                 onClick = { bestellungCount.value = bestellungCount.value - 1 }) {
-                 Text(text = "-")
-                 if (bestellungCount.value == 1)
-                     isOne.value = true;
-             }
-             var count by remember { mutableStateOf(bestellungCount.value) }
-
-             TextField(
-                 enabled = false,
-                 value = bestellungCount.value.toString(),
-                 onValueChange = { bestellungCount.value = count },
-                 modifier = Modifier.width(90.dp)
-             )
-
-             Button(onClick = { bestellungCount.value = bestellungCount.value + 1 }) {
-                 Text(text = "+")
-                 if (bestellungCount.value != 1)
-                     isOne.value = false;
-             }
-         }
-         Row() {
-             var orderedFor by remember { mutableStateOf(bestellungFuer.value) }
-
-             TextField(
-                 value = orderedFor,
-                 onValueChange = { orderedFor = it },
-                 label = { Text("Für") }
-             )
-         }
-         Row() {
-             var comment by remember { mutableStateOf(bestellungComment.value) }
-
-             TextField(
-                 value = comment,
-                 onValueChange = { comment = it },
-                 label = { Text("Kommentar") }
-             )
-         }
-
-         Row() {
-             Box(
-                 modifier = Modifier
-                     .border(2.dp, Color.Black)
-                     .wrapContentSize()
-
-             ) {
-                 LazyColumn(
-                     modifier = Modifier.padding(top = 2.dp),
-                     horizontalAlignment = Alignment.CenterHorizontally,
-                     verticalArrangement = Arrangement.Center
-                 ) {
-                     item {
-                         Row(
-                             horizontalArrangement = Arrangement.Center,
-                             verticalAlignment = Alignment.CenterVertically,
-                             modifier = Modifier
-                                 .fillMaxWidth()
-                                 .padding(8.dp)
-                         ) {
-                             Text(
-                                 text = "Zeit",
-                                 fontSize = 25.sp,
-                                 color = Color.Gray,
-                                 modifier = Modifier.padding(12.dp)
-                             )
-                             Text(
-                                 text = "Auswahl",
-                                 fontSize = 25.sp,
-                                 color = Color.Gray,
-                                 modifier = Modifier.padding(12.dp)
-                             )
-                             Text(
-                                 text = "Freie Plätze",
-                                 fontSize = 25.sp,
-                                 color = Color.Gray,
-                                 modifier = Modifier.padding(12.dp)
-                             )
-
-                         }
-
-                     }
-                     items(oeffnungszeiten.toMutableStateList()) { oeffnungszeiten ->
-                         OeffnungszeitenItem(oeffnungszeiten = oeffnungszeiten)
-                     }
-                 }
-             }
-             Row(
-
-             ) {
-                 Button(
-                     onClick = {
-                         navController.navigate("uebersicht")
-                         postBestellung()
-                         isLoggedIn.value = true
-                     },
-                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green)
-                 ) {
-                     Text(text = "Abschließen")
-                 }
-                 Button(
-                     onClick = {
-                         navController.navigate("uebersicht")
-                     },
-                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
-                 ) {
-                     Text(text = "Abbrechen")
-                 }
-             }
-         }
-     }*/
-
 
     val context = LocalContext.current
     Column(

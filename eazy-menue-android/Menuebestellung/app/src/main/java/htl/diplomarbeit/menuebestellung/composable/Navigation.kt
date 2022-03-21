@@ -1,4 +1,4 @@
-package com.diplomarbeit.menuebestellung
+package htl.diplomarbeit.menuebestellung.composable
 
 import android.os.Build
 import androidx.annotation.RequiresApi

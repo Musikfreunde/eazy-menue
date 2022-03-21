@@ -1,4 +1,4 @@
-package com.diplomarbeit.menuebestellung
+package htl.diplomarbeit.menuebestellung.composable
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import htl.diplomarbeit.menuebestellung.composable.isLoggedIn
 import htl.diplomarbeit.menuebestellung.composable.uebersichtDate
-import htl.diplomarbeit.menuebestellung.getMenuesForDate
+import htl.diplomarbeit.menuebestellung.api.*
 import java.util.*
 
 @RequiresApi(Build.VERSION_CODES.O)

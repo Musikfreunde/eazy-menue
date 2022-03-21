@@ -20,9 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import htl.diplomarbeit.menuebestellung.api.*
 import htl.diplomarbeit.menuebestellung.dataClasses.Bestellung
-import htl.diplomarbeit.menuebestellung.deleteBestellung
-import htl.diplomarbeit.menuebestellung.menues
 import java.time.LocalDateTime
 
 

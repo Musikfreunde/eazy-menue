@@ -19,8 +19,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import htl.diplomarbeit.menuebestellung.*
 import htl.diplomarbeit.menuebestellung.R
+import htl.diplomarbeit.menuebestellung.api.*
 
 var isLoggedIn = mutableStateOf(false)
 var currUser = mutableStateOf("");
@@ -149,3 +149,4 @@ fun LoginScreen(navController: NavHostController) {
     }
     getOeffnungszeiten()
 }
+
