@@ -146,6 +146,38 @@ fun getOeffnungszeiten() {
     })
 }
 
+
+var seats = mutableStateOf("")
+
+fun getOeffnungszeitenForIdAndDate(id : Int, date : String) : String {
+    val url = ApiObject.oeffnungszeiten +'/'+ id.toString() + "?date=" + date
+
+    val request = Request.Builder()
+        .url(url)
+        .build()
+
+    client.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            e.printStackTrace()
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+
+                seats.value =  response.body!!.string()
+            }
+        }
+    })
+    println(seats.value)
+    return seats.value
+}
+
+
+
+
+
 fun postBestellung() {
     val url = ApiObject.bestellungUrl
 

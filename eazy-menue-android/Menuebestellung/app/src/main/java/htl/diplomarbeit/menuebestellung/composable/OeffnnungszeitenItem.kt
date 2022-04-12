@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import htl.diplomarbeit.menuebestellung.dataClasses.Oeffnungszeiten
 
 @Composable
-fun OeffnungszeitenItem(oeffnungszeiten: Oeffnungszeiten) {
+fun OeffnungszeitenItem(oeffnungszeiten: Oeffnungszeiten, date: String) {
 
 
     val checkedState = remember { mutableStateOf(oeffnungszeiten.chosen) }
@@ -62,8 +62,9 @@ fun OeffnungszeitenItem(oeffnungszeiten: Oeffnungszeiten) {
                 .fillMaxWidth()
                 .weight(1f)
         ) {
+
             Text(
-                text = oeffnungszeiten.maxSeats.toString(),
+                text = oeffnungszeiten.maxSeats.toString(), //getOeffnungszeitenForIdAndDate(oeffnungszeiten.id, date),
                 fontSize = 18.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(12.dp)

@@ -220,7 +220,7 @@ fun BestellenScreen(navController: NavHostController) {
                 ) {
 
                     items(oeffnungszeiten.toMutableStateList()) { oeffnungszeiten ->
-                        OeffnungszeitenItem(oeffnungszeiten = oeffnungszeiten)
+                        OeffnungszeitenItem(oeffnungszeiten = oeffnungszeiten, bestellungDate.value)
                     }
                 }
             }
