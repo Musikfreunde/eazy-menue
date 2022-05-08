@@ -54,13 +54,13 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.name === 'Print' && Vue.$keycloak.hasRealmRole('mitarbeiter')) {
-    next({ name: 'Ubersicht' })
+    next({ name: 'Uebersicht' })
   }
   if (to.name === 'Verlauf' && Vue.$keycloak.hasRealmRole('kantine')) {
-    next({ name: 'Ubersicht' })
+    next({ name: 'Uebersicht' })
   }
   if (to.name === 'Statistiken' && Vue.$keycloak.hasRealmRole('kantine')) {
-    next({ name: 'Ubersicht' })
+    next({ name: 'Uebersicht' })
   }
   next()
 })
